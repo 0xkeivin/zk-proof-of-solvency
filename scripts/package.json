@@ -1,6 +1,12 @@
 {
   "dependencies": {
+    "buffer": "^6.0.3",
+    "crypto": "^1.0.1",
     "crypto-ts": "^1.0.2",
+    "ethers": "^5.7.2",
     "merkletreejs": "^0.3.9"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.12"
   }
 }
