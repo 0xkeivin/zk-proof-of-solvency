@@ -1,6 +1,8 @@
 // converted from Vitalik's example code from https://github.com/ethereum/research/blob/master/proof_of_solvency/merkle_sum_tree.py
 
-import { SHA256 } from "crypto-ts";
+// import { SHA256 } from "crypto-ts";
+import SHA256 from 'crypto-js/sha256'; // works!
+
 import { Buffer } from "buffer";
 function hash(a: any): any {
     return SHA256(a);
@@ -38,7 +40,7 @@ const EMPTY_LEAF: Leaf = {
     balance: 0,
 };
 // print binary representation of empty leaf
-// console.log(`EMPTY_LEAF:${EMPTY_LEAF[0]}`)
+// console.log(`EMPTY_LEAF:${EMPTY_LEAF[0]}\n`)
 
 // The function for computing a parent node given two child nodes
 function combine_tree_nodes(left: Leaf, right: Leaf): Leaf {
@@ -70,13 +72,13 @@ function build_merkle_sum_tree(user_table: [string, string, number][]): Leaf[] {
     // create a list of leaves
     const leaves: Leaf[] = user_table.map((user) => {
         const [username, salt, balance] = user;
-        console.log(`username:${username}, salt:${salt}, balance:${balance}`)
+        // console.log(`username:${username}, salt:${salt}, balance:${balance}\n`)
         return userdata_to_leaf(username, salt, balance);
     });
-    console.log(`leaves:${JSON.stringify(leaves)}`)
+    console.log(`leaves:${JSON.stringify(leaves)}\n`)
     // get the next power of 2
     const next_power_of_2 = get_next_power_of_2(leaves.length);
-    console.log(`next_power_of_2:${next_power_of_2}`)
+    console.log(`next_power_of_2:${next_power_of_2}\n`)
     // create a list of empty leaves
     const empty_leaves = Array(next_power_of_2 - leaves.length).fill(EMPTY_LEAF);
     // add the empty leaves to the list of leaves
@@ -95,7 +97,7 @@ function build_merkle_sum_tree(user_table: [string, string, number][]): Leaf[] {
             const left = nodes[2 * j];
             const right = nodes[2 * j + 1];
             // why undefined here?
-            console.log(`left:${JSON.stringify(left)}, right:${JSON.stringify(right)}`)
+            console.log(`left:${JSON.stringify(left)}, right:${JSON.stringify(right)}\n`)
             // combine the nodes
             const new_node = combine_tree_nodes(left, right);
             // add the new node to the list of nodes
@@ -154,20 +156,21 @@ function test(): void {
         ["carol", "salt3", 300],
         ["dave", "salt4", 400],
     ];
-    console.log(`user_table:${user_table}`)
+    console.log(`user_table:${user_table}\n`)
+    console.log(`user_table: len: ${user_table.length}\n`)
     // build the merkle sum tree
     const nodes = build_merkle_sum_tree(user_table);
     // print nodes
 
     // get the root
     const root = get_root(nodes);
-    console.log(`root:${JSON.stringify(root)}`)
+    console.log(`root:${JSON.stringify(root)}\n`)
     // get the proof for the first user
     const proof = get_proof(nodes, 0);
-    console.log(`proof:${JSON.stringify(proof)}`)
+    console.log(`proof:${JSON.stringify(proof)}\n`)
     // verify the proof
     const verified = verifyProof("alice", "salt1", 100, 0, user_table.length, root, proof);
-    console.log(`verified: ${verified}`);
+    console.log(`verified: ${verified}\n`);
 }
 
 test();

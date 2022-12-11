@@ -72,15 +72,21 @@ def verify_proof(username, salt, balance, index, user_table_size, root, proof):
 
 def test():
     import os
+    # user_table = [
+    #     (b'Alice',   os.urandom(32), 20),
+    #     (b'Bob',     os.urandom(32), 50),
+    #     (b'Charlie', os.urandom(32), 10),
+    #     (b'David',   os.urandom(32), 164),
+    #     (b'Eve',     os.urandom(32), 870),
+    #     (b'Fred',    os.urandom(32), 6),
+    #     (b'Greta',   os.urandom(32), 270),
+    #     (b'Henry',   os.urandom(32), 90),
+    # ]
     user_table = [
-        (b'Alice',   os.urandom(32), 20),
-        (b'Bob',     os.urandom(32), 50),
-        (b'Charlie', os.urandom(32), 10),
-        (b'David',   os.urandom(32), 164),
-        (b'Eve',     os.urandom(32), 870),
-        (b'Fred',    os.urandom(32), 6),
-        (b'Greta',   os.urandom(32), 270),
-        (b'Henry',   os.urandom(32), 90),
+        (b"alice", b"salt1", 100),
+        (b"bob", b"salt2", 200),
+        (b"carol", b"salt3", 300),
+        (b"dave", b"salt4", 400)
     ]
     tree = build_merkle_sum_tree(user_table)
     root = get_root(tree)
@@ -89,7 +95,10 @@ def test():
     proof = get_proof(tree, 2)
     print("Proof:", proof)
     print("\n")
-    assert verify_proof(b'Charlie', user_table[2][1], 10, 2, 8, root, proof)
+    # assert verify_proof(b'Charlie', user_table[2][1], 10, 2, 8, root, proof)
+    print("user_table[0][1]:", user_table[0][1])
+    assert verify_proof(b'alice', user_table[0][1], 100, 0, 4, root, proof)
+    
     print("Proof checked")
 
 if __name__ == '__main__':
