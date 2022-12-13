@@ -134,48 +134,19 @@ async function main() {
 
         // --------------------------------------
 
-        // --------------------------------------
-
-        // console.log(`BasicMerkleTree: local tree root hash after txn0: ${tree.getRoot()}`);
-        // console.log(`BasicMerkleTree: smart contract root hash after txn0: ${zkapp.treeRoot.get()}`);
-
-        // --------------------------------------
-
         // check inclusion
         const checkVal = Field(5)
         checkLeafInclusion(
             zkapp,
             height,
             tree,
-            // leafValArray,
             checkVal);
         // final tree 
-        // const finalTree = tree;
-        // console.log(`\nfinalTree: ${JSON.stringify(finalTree)}`);
-        // // check inclusion proof of leaf node 0
-        // const checkVal = 7 // value of leaf node 0
-        // const checkIndex = 7 // index of leaf node 0
-        // const checkWitness0 = new MerkleWitness20(tree.getWitness(BigInt(checkIndex)));
-        // const userAccount1 = new UserAccount(
-        //     Field(checkVal),
-        // )
-        // const calculatedRoot = checkWitness0.calculateRoot(
-        //     Field(checkVal),
-        // )
-        // console.log(`\ncalculatedRoot: ${calculatedRoot}`)
-        // const checkInclusion = zkapp.checkInclusion(
-        //     userAccount1,
-        //     checkWitness0,
-        // )
-
-
-        // console.log(`\ncheckInclusion: ${checkInclusion}`)
+        const finalTree = tree;
+        console.log(`\nfinalTree: ${JSON.stringify(finalTree)}`);
+        
 
     }
-
-
-
-
     await shutdown();
 }
 
