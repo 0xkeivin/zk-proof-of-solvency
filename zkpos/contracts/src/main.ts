@@ -58,11 +58,16 @@ async function insertValuesIntoTree(deployerAccount: PrivateKey, basicTreeZkAppP
 
 // create function to check through all leaf nodes in merkle tree
 // and check that they are equal to the values in the values array
-async function checkLeafInclusion(zkapp: BasicMerkleTreeContract, height: number, tree: MerkleTree, values: Field[], checkValue: Field) {
+async function checkLeafInclusion(zkapp: BasicMerkleTreeContract, height: number, tree: MerkleTree, checkValue: Field) {
     // get class
     class MerkleWitness20 extends MerkleWitness(height) { }
+    // calculate leaves in tree
+    const leaves = 2 ** height;
+    // create range of values from 0 to leaves
+    const values = Array.from(Array(leaves).keys());
     // for each value in values array
     for (const leafIndex in values) {
+        console.log(`DEBUG: leafIndex: ${leafIndex}`);
         // const leafIndex = values.indexOf(leafValue);
         // get witness
         const witness = new MerkleWitness20(tree.getWitness(BigInt(leafIndex)));
@@ -124,6 +129,7 @@ async function main() {
 
         // --------------------------------------
         const leafValArray = [Field(0), Field(1), Field(2), Field(3), Field(4), Field(5), Field(6), Field(7)];
+        console.log(`\nleafValArray: ${leafValArray}`);
         await insertValuesIntoTree(deployerAccount, basicTreeZkAppPrivateKey, zkapp, height, tree, leafValArray);
 
         // --------------------------------------
@@ -136,12 +142,12 @@ async function main() {
         // --------------------------------------
 
         // check inclusion
-        const checkVal = Field(8)
+        const checkVal = Field(5)
         checkLeafInclusion(
             zkapp,
             height,
             tree,
-            leafValArray,
+            // leafValArray,
             checkVal);
         // final tree 
         // const finalTree = tree;
