@@ -58,11 +58,18 @@ export class BasicMerkleTreeContract extends SmartContract {
     // fetch on-chain root commitment
     const root = this.treeRoot.get();
     this.treeRoot.assertEquals(root);
-    console.log("\n")
-    console.log(`root: ${root.toString()}`)
     // check if value is within committed merkle tree
-    path.calculateRoot(userAccountVal.accountBalance).assertEquals(root);
-    return true;
+    const calculatedRoot = path.calculateRoot(userAccountVal.accountBalance);
+    if (calculatedRoot.toString() === root.toString()) {
+      // console.log(`DEBUG:calculatedRoot: ${calculatedRoot.toString()}`)
+      // console.log(`DEBUG:userAccountVal: ${JSON.stringify(userAccountVal)}`)
+      return true
+    } else {
+      // console.log("DEBUG: NOT MATCHING")
+      return false
+    }
+    // path.calculateRoot(userAccountVal.accountBalance).assertEquals(root);
+    // return true;
   }
 
 
