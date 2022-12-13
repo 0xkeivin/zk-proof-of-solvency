@@ -24,7 +24,37 @@ import {
 } from 'snarkyjs'
 
 //   import { LedgerContract } from './LedgerContract.js'
-import { BasicMerkleTreeContract , UserAccount} from './BasicMerkleTreeContract.js'
+import { BasicMerkleTreeContract, UserAccount } from './BasicMerkleTreeContract.js'
+
+// create an async function that inserts array of values into leafNodes
+// of merkle tree
+// then call this function in main
+async function insertValuesIntoTree(deployerAccount: PrivateKey, basicTreeZkAppPrivateKey: PrivateKey, zkapp: BasicMerkleTreeContract, height: number, tree: MerkleTree, values: Field[]) {
+    // get class
+    class MerkleWitness20 extends MerkleWitness(height) { }
+
+    // counter for leaf nodes
+    let i = 0;
+    // for each value in values array
+    for (const leafValue of values) {
+        const leafIndex = values.indexOf(leafValue);
+        // insert value into leaf node
+        const witness = new MerkleWitness20(tree.getWitness(BigInt(leafIndex)));
+        tree.setLeaf(BigInt(leafIndex), leafValue);
+
+        const txn = await Mina.transaction(deployerAccount, () => {
+            zkapp.update(
+                witness,
+                //   Field.zero,
+                Field(0),
+                leafValue);
+            zkapp.sign(basicTreeZkAppPrivateKey);
+        });
+        await txn.send();
+
+    }
+}
+
 
 async function main() {
     await isReady;
@@ -38,6 +68,7 @@ async function main() {
 
     // --------------------------------------
     // create a new merkle tree and BasicMerkleTreeContract zkapp account 
+
 
     {
 
@@ -88,36 +119,40 @@ async function main() {
 
         // --------------------------------------
 
-        const incrementIndex = 0;
-        const incrementAmount = Field(2);
+        // const incrementIndex = 0;
+        // const incrementAmount = Field(2);
 
-        const witness = new MerkleWitness20(tree.getWitness(BigInt(incrementIndex)));
-        tree.setLeaf(BigInt(incrementIndex), incrementAmount);
+        // const witness = new MerkleWitness20(tree.getWitness(BigInt(incrementIndex)));
+        // tree.setLeaf(BigInt(incrementIndex), incrementAmount);
 
-        const txn0 = await Mina.transaction(deployerAccount, () => {
-            zkapp.update(
-                witness,
-                //   Field.zero,
-                Field(0),
-                incrementAmount);
-            zkapp.sign(basicTreeZkAppPrivateKey);
-        });
-        await txn0.send();
+        // const txn0 = await Mina.transaction(deployerAccount, () => {
+        //     zkapp.update(
+        //         witness,
+        //         //   Field.zero,
+        //         Field(0),
+        //         incrementAmount);
+        //     zkapp.sign(basicTreeZkAppPrivateKey);
+        // });
+        // await txn0.send();
+        // --------------------------------------
+        const leafValArray = [Field(1), Field(2), Field(3), Field(4), Field(5), Field(6), Field(7), Field(8)];
+        await insertValuesIntoTree(deployerAccount, basicTreeZkAppPrivateKey, zkapp, height, tree, leafValArray);
+
         // --------------------------------------
 
-        const incrementIndex1 = 1;
-        const incrementAmount1 = Field(3);
-        const witness1 = new MerkleWitness20(tree.getWitness(BigInt(incrementIndex1)));
-        tree.setLeaf(BigInt(incrementIndex1), incrementAmount1);
-        const txn1 = await Mina.transaction(deployerAccount, () => {
-            zkapp.update(
-                witness1,
-                //   Field.zero,
-                Field(0),
-                incrementAmount1);
-            zkapp.sign(basicTreeZkAppPrivateKey);
-        });
-        await txn1.send();
+        // const incrementIndex1 = 1;
+        // const incrementAmount1 = Field(3);
+        // const witness1 = new MerkleWitness20(tree.getWitness(BigInt(incrementIndex1)));
+        // tree.setLeaf(BigInt(incrementIndex1), incrementAmount1);
+        // const txn1 = await Mina.transaction(deployerAccount, () => {
+        //     zkapp.update(
+        //         witness1,
+        //         //   Field.zero,
+        //         Field(0),
+        //         incrementAmount1);
+        //     zkapp.sign(basicTreeZkAppPrivateKey);
+        // });
+        // await txn1.send();
         // --------------------------------------
 
         console.log(`BasicMerkleTree: local tree root hash after txn0: ${tree.getRoot()}`);
@@ -129,8 +164,8 @@ async function main() {
         const finalTree = tree;
         console.log(`\nfinalTree: ${JSON.stringify(finalTree)}`);
         // check inclusion proof of leaf node 0
-        const checkVal = 3 // value of leaf node 0
-        const checkIndex = 1 // index of leaf node 0
+        const checkVal = 1 // value of leaf node 0
+        const checkIndex = 0 // index of leaf node 0
         const checkWitness0 = new MerkleWitness20(tree.getWitness(BigInt(checkIndex)));
         const userAccount1 = new UserAccount(
             Field(checkVal),
@@ -143,7 +178,7 @@ async function main() {
             userAccount1,
             checkWitness0,
         )
-        
+
 
         console.log(`\ncheckInclusion: ${checkInclusion}`)
         // --------------------------------------
