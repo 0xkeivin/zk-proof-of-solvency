@@ -1,0 +1,42 @@
+[
+  {
+    "publicKey": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+    "salt": "salt0",
+    "accountBalance": 0
+  },
+  {
+    "publicKey": "0xee564fd8992c055663a124db7c6aa8f63ef01af5",
+    "salt": "salt1",
+    "accountBalance": 100
+  },
+  {
+    "publicKey": "0xa9d1e08c7793af67e9d92fe308d5697fb81d3e43",
+    "salt": "salt2",
+    "accountBalance": 200
+  },
+  {
+    "publicKey": "0x6b36094c4b0108cc3d6f8ca05fb8878eff54a541",
+    "salt": "salt3",
+    "accountBalance": 300
+  },
+  {
+    "publicKey": "0x50b90054be990305fd1899e7dcd9bd98cf4b5b4a",
+    "salt": "salt4",
+    "accountBalance": 400
+  },
+  {
+    "publicKey": "0xd6a309f49cf79542cea91df7b334eb4bd29aa0d7",
+    "salt": "salt5",
+    "accountBalance": 500
+  },
+  {
+    "publicKey": "0x4305be04c4416152a880d319b85e4ccbdd267073",
+    "salt": "salt6",
+    "accountBalance": 600
+  },
+  {
+    "publicKey": "0xad3f1453667e44ce5f1c180c967a5310793f8013",
+    "salt": "salt7",
+    "accountBalance": 700
+  }
+]

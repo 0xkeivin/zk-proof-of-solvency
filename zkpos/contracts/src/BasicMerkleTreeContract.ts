@@ -18,18 +18,36 @@ import {
 } from 'snarkyjs';
 import { Witness } from 'snarkyjs/dist/node/lib/merkle_tree';
 
+// create a class that accepts tuple of 3 fields
+// and returns a hash of the tuple
 
 export class UserAccount extends Struct({
-  // publicKey: PublicKey,
-  accountBalance: Field,
+  // publicKey: Field,
+  // salt: Field,
+  // accountBalance: Field,
+  publicKey: String,
+  salt: String,
+  accountBalance: Number,
 }) {
-  constructor(accountBalance: Field) {
-    super({ accountBalance });
-    // this.publicKey = publicKey;
+  constructor(publicKey: string, salt: string, accountBalance: number) {
+    super({ publicKey, salt, accountBalance });
+    this.publicKey = publicKey;
+    this.salt = salt;
     this.accountBalance = accountBalance;
   }
   hash(): Field {
-    return Poseidon.hash([this.accountBalance]);
+    const publicKeyField = Field(this.publicKey);
+    const saltField = Field(this.salt);
+    const accountBalanceField = Field(this.accountBalance);
+    
+    return Poseidon.hash([
+      // publicKeyField,
+      // saltField,
+      accountBalanceField,
+      // Field(this.publicKey), 
+      // Field(this.salt), 
+      // Field(this.accountBalance)
+    ]);
   }
 }
 
@@ -59,7 +77,9 @@ export class BasicMerkleTreeContract extends SmartContract {
     const root = this.treeRoot.get();
     this.treeRoot.assertEquals(root);
     // check if value is within committed merkle tree
-    const calculatedRoot = path.calculateRoot(userAccountVal.accountBalance);
+    // const calculatedRoot = path.calculateRoot(userAccountVal.accountBalance);
+    const calculatedRoot = path.calculateRoot(userAccountVal.hash());
+
     if (calculatedRoot.toString() === root.toString()) {
       // console.log(`DEBUG:calculatedRoot: ${calculatedRoot.toString()}`)
       // console.log(`DEBUG:userAccountVal: ${JSON.stringify(userAccountVal)}`)
