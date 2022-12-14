@@ -42,7 +42,7 @@ async function insertValuesIntoTree(deployerAccount: PrivateKey, basicTreeZkAppP
         console.log(`DEBUG: witness: ${JSON.stringify(witness)}`)
         const leafValHash =  leafValue.hash();
         console.log(`DEBUG: leafValue.hash(): ${leafValHash}`)
-        // tree.setLeaf(BigInt(leafIndex), leafValHash);
+        tree.setLeaf(BigInt(leafIndex), leafValHash);
         console.log(`DEBUG: BREAKPOINT 1`)
 
         const txn = await Mina.transaction(deployerAccount, () => {
