@@ -15,11 +15,7 @@ import {
 
 // create a class that accepts tuple of 3 fields
 // and returns a hash of the tuple
-
 export class UserAccount extends Struct({
-  // publicKey: Field,
-  // salt: Field,
-  // accountBalance: Field,
   publicKey: String,
   salt: Number,
   accountBalance: Number,
@@ -55,14 +51,17 @@ export class UserAccount extends Struct({
 class MerkleWitness20 extends MerkleWitness(4) { }
 
 export class BasicMerkleTreeContract extends SmartContract {
+  @state(Field) treeHeight = State<Field>();
   @state(Field) treeRoot = State<Field>();
-
+  
   deploy(args: DeployArgs) {
     super.deploy(args);
     this.setPermissions({
       ...Permissions.default(),
       editState: Permissions.proofOrSignature(),
     });
+    // hardcoded for now
+    this.treeHeight.set(Field(4));
   }
 
   @method initState(initialRoot: Field) {
@@ -98,21 +97,21 @@ export class BasicMerkleTreeContract extends SmartContract {
 
   @method update(
     leafWitness: MerkleWitness20,
-    numberBefore: Field,
-    incrementAmount: Field,
+    previousVal: Field,
+    updatedVal: Field,
   ) {
     const initialRoot = this.treeRoot.get();
     this.treeRoot.assertEquals(initialRoot);
     // muted for testing
-    // incrementAmount.assertLt(Field(10));
-    // console.log(`DEBUG:numberBefore: ${numberBefore.toString()}`)
+    // updatedVal.assertLt(Field(10));
+    // console.log(`DEBUG:previousVal: ${previousVal.toString()}`)
     // check the initial state matches what we expect
     // console.log(`DEBUG:rootBefore: ${rootBefore.toString()}`)
     // dont need this ?
     // rootBefore.assertEquals(initialRoot);
 
     // compute the root after incrementing
-    const rootAfter = leafWitness.calculateRoot(numberBefore.add(incrementAmount));
+    const rootAfter = leafWitness.calculateRoot(previousVal.add(updatedVal));
     // console.log(`DEBUG:rootAfter: ${rootAfter.toString()}`)
     // set the new root
     this.treeRoot.set(rootAfter);
