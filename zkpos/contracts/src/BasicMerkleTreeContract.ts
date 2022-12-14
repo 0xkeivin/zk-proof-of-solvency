@@ -26,28 +26,36 @@ export class UserAccount extends Struct({
   // salt: Field,
   // accountBalance: Field,
   publicKey: String,
-  salt: String,
+  salt: Number,
   accountBalance: Number,
 }) {
-  constructor(publicKey: string, salt: string, accountBalance: number) {
+  constructor(publicKey: string, salt: number, accountBalance: number) {
     super({ publicKey, salt, accountBalance });
     this.publicKey = publicKey;
     this.salt = salt;
     this.accountBalance = accountBalance;
   }
+  // 
   hash(): Field {
-    // const publicKeyField = Field(this.publicKey);
-    // const saltField = Field(this.salt);
+    const publicKeyField = Field(BigInt(this.publicKey));
+    const saltField = Field(this.salt);
     const accountBalanceField = Field(this.accountBalance);
-    const hashFields = [
-      // publicKeyField, 
-      // saltField, 
-      accountBalanceField
-    ]
-    return Poseidon.hash([accountBalanceField]
-    );
+    console.log(`DEBUG:publicKeyField: ${publicKeyField.toString()}`)
+    console.log(`DEBUG:accountBalanceField: ${accountBalanceField.toString()}`)
+    console.log(`DEBUG:saltField: ${saltField.toString()}`)
+
+    // return Poseidon.hash([saltField, accountBalanceField].flat()
+    return Poseidon.hash(
+      [
+        publicKeyField,
+        saltField,
+        accountBalanceField,
+
+      ]
+    )
   }
 }
+
 
 class MerkleWitness20 extends MerkleWitness(4) { }
 

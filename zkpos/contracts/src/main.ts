@@ -40,10 +40,11 @@ async function insertValuesIntoTree(deployerAccount: PrivateKey, basicTreeZkAppP
         // insert value into leaf node
         const witness = new MerkleWitness20(tree.getWitness(BigInt(leafIndex)));
         console.log(`DEBUG: witness: ${JSON.stringify(witness)}`)
-        const leafValHash =  leafValue.hash();
+        const leafValHash = leafValue.hash();
         console.log(`DEBUG: leafValue.hash(): ${leafValHash}`)
         tree.setLeaf(BigInt(leafIndex), leafValHash);
         console.log(`DEBUG: BREAKPOINT 1`)
+
 
         const txn = await Mina.transaction(deployerAccount, () => {
             zkapp.update(
@@ -64,7 +65,7 @@ async function insertValuesIntoTree(deployerAccount: PrivateKey, basicTreeZkAppP
 // and check that they are equal to the values in the values array
 async function checkLeafInclusion(zkapp: BasicMerkleTreeContract, height: number, tree: MerkleTree,
     // checkAddress: Field, checkSalt: Field, checkValue: Field) {
-    checkAddress: string, checkSalt: string, checkValue: number) {
+    checkAddress: string, checkSalt: number, checkValue: number) {
 
     // get class
     class MerkleWitness20 extends MerkleWitness(height) { }
@@ -149,40 +150,52 @@ async function main() {
         //     Field(0)
         // );
         // console.log(`DEBUG: user1: ${user1}`);
+        // create a string constant 
 
         const userAccountArray = [
             new UserAccount("0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
-                "salt0",
+                100,
                 0),
             new UserAccount(
                 "0xee564fd8992c055663a124db7c6aa8f63ef01af5",
-                "salt1",
+                101,
                 100),
             new UserAccount(
                 "0xa9d1e08c7793af67e9d92fe308d5697fb81d3e43",
-                "salt2",
+                102,
                 200),
             new UserAccount(
                 "0x6b36094c4b0108cc3d6f8ca05fb8878eff54a541",
-                "salt3",
+                103,
                 300),
             new UserAccount(
                 "0x50b90054be990305fd1899e7dcd9bd98cf4b5b4a",
-                "salt4",
+                104,
                 400),
             new UserAccount(
                 "0xd6a309f49cf79542cea91df7b334eb4bd29aa0d7",
-                "salt5",
+                105,
                 500),
             new UserAccount(
                 "0x4305be04c4416152a880d319b85e4ccbdd267073",
-                "salt6",
+                106,
                 600),
             new UserAccount(
                 "0xad3f1453667e44ce5f1c180c967a5310793f8013",
-                "salt7",
+                107,
                 700),
         ];
+
+
+        console.log("\n")
+        const publicKey0 = userAccountArray[0].publicKey;
+        console.log(`DEBUG: publicKeyField: ${publicKey0} ${typeof (publicKey0)}`)
+        const publicKey0BigInt = BigInt(publicKey0)
+        console.log(`DEBUG: publicKeyField: ${publicKey0BigInt} ${typeof (publicKey0BigInt)}`)
+        const publicKeyField = Field(publicKey0BigInt);
+        console.log(`DEBUG: publicKeyField: ${publicKeyField}`)
+        console.log("\n")
+
 
         console.log(`\nuserAccountArray: ${JSON.stringify(userAccountArray)}`);
 
