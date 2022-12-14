@@ -39,11 +39,11 @@ async function insertValuesIntoTree(deployerAccount: PrivateKey, basicTreeZkAppP
         console.log(`DEBUG: leafIndex: ${leafIndex}`)
         // insert value into leaf node
         const witness = new MerkleWitness20(tree.getWitness(BigInt(leafIndex)));
-        console.log(`DEBUG: witness: ${JSON.stringify(witness)}`)
+        // console.log(`DEBUG: witness: ${JSON.stringify(witness)}`)
         const leafValHash = leafValue.hash();
-        console.log(`DEBUG: leafValue.hash(): ${leafValHash}`)
+        // console.log(`DEBUG: leafValue.hash(): ${leafValHash}`)
         tree.setLeaf(BigInt(leafIndex), leafValHash);
-        console.log(`DEBUG: BREAKPOINT 1`)
+        // console.log(`DEBUG: BREAKPOINT 1`)
 
 
         const txn = await Mina.transaction(deployerAccount, () => {
@@ -55,7 +55,6 @@ async function insertValuesIntoTree(deployerAccount: PrivateKey, basicTreeZkAppP
             zkapp.sign(basicTreeZkAppPrivateKey); // Todo ? 
 
         });
-        console.log(`DEBUG: txn: ${txn}`)
         await txn.send();
 
     }
@@ -66,27 +65,28 @@ async function insertValuesIntoTree(deployerAccount: PrivateKey, basicTreeZkAppP
 async function checkLeafInclusion(zkapp: BasicMerkleTreeContract, height: number, tree: MerkleTree,
     // checkAddress: Field, checkSalt: Field, checkValue: Field) {
     checkAddress: string, checkSalt: number, checkValue: number) {
-
+    console.log(`\n\nDEBUG: checkLeafInclusion()`)
     // get class
     class MerkleWitness20 extends MerkleWitness(height) { }
     // calculate leaves in tree
-    const leaves = 2 ** height;
+    const leaves = (2 ** height) / 2;
     // create range of values from 0 to leaves
     const values = Array.from(Array(leaves).keys());
+    console.log(`DEBUG: values: ${JSON.stringify(values)}`)
+    const userAccount = new UserAccount(
+        // Field(checkAddress),
+        // Field(checkSalt),
+        // Field(checkValue),
+        checkAddress,
+        checkSalt,
+        checkValue,
+    )
     // for each value in values array
     for (const leafIndex in values) {
         console.log(`DEBUG: leafIndex: ${leafIndex}`);
         // const leafIndex = values.indexOf(leafValue);
         // get witness
         const witness = new MerkleWitness20(tree.getWitness(BigInt(leafIndex)));
-        const userAccount = new UserAccount(
-            // Field(checkAddress),
-            // Field(checkSalt),
-            // Field(checkValue),
-            checkAddress,
-            checkSalt,
-            checkValue,
-        )
         // const calculatedRoot = witness.calculateRoot(
         //     leafValue,
         // )
@@ -95,11 +95,11 @@ async function checkLeafInclusion(zkapp: BasicMerkleTreeContract, height: number
             witness,
         )
         if (checkInclusionResult) {
-            console.log(`DEBUG: Leaf included at index ${leafIndex} with value ${checkValue}`);
+            console.log(`DEBUG: Leaf included at index ${leafIndex} with value ${JSON.stringify(userAccount)}`);
             return
         }
     }
-    console.log(`DEBUG: Leaf not included in tree with value ${checkValue}`);
+    console.log(`DEBUG: Leaf not included in tree with value ${JSON.stringify(userAccount)}`);
     return
 }
 
@@ -208,25 +208,21 @@ async function main() {
         // --------------------------------------
 
         // check inclusion
-        // const checkVal = Field(5)
-        // const checkUserAccount5 = new UserAccount(
-        //     // Field("0xd6a309f49cf79542cea91df7b334eb4bd29aa0d7"),
-        //     // Field("salt5"),
-        //     // Field(500)
-        //     "0xd6a309f49cf79542cea91df7b334eb4bd29aa0d7",
-        //     "salt5",
-        //     500
-        // )
-        // console.log(`\ncheckUserAccount5: ${JSON.stringify(checkUserAccount5)}`);
-        // await checkLeafInclusion(
-        //     zkapp,
-        //     height,
-        //     tree,
-        //     checkUserAccount5.publicKey,
-        //     checkUserAccount5.salt,
-        //     checkUserAccount5.accountBalance,);
+
+        const checkUserAccount5 = new UserAccount(
+            "0xd6a309f49cf79542cea91df7b334eb4bd29aa0d7",
+            105,
+            500);
+        await checkLeafInclusion(
+            zkapp,
+            height,
+            tree,
+            checkUserAccount5.publicKey,
+            checkUserAccount5.salt,
+            checkUserAccount5.accountBalance,);
         // final tree 
         const finalTree = tree;
+        console.log(`\ncheckUserAccount5: ${JSON.stringify(checkUserAccount5)}`);
         console.log(`\nfinalTree: ${JSON.stringify(finalTree)}`);
 
 

@@ -40,9 +40,9 @@ export class UserAccount extends Struct({
     const publicKeyField = Field(BigInt(this.publicKey));
     const saltField = Field(this.salt);
     const accountBalanceField = Field(this.accountBalance);
-    console.log(`DEBUG:publicKeyField: ${publicKeyField.toString()}`)
-    console.log(`DEBUG:accountBalanceField: ${accountBalanceField.toString()}`)
-    console.log(`DEBUG:saltField: ${saltField.toString()}`)
+    // console.log(`DEBUG:publicKeyField: ${publicKeyField.toString()}`)
+    // console.log(`DEBUG:accountBalanceField: ${accountBalanceField.toString()}`)
+    // console.log(`DEBUG:saltField: ${saltField.toString()}`)
 
     // return Poseidon.hash([saltField, accountBalanceField].flat()
     return Poseidon.hash(
@@ -108,16 +108,16 @@ export class BasicMerkleTreeContract extends SmartContract {
     this.treeRoot.assertEquals(initialRoot);
     // muted for testing
     // incrementAmount.assertLt(Field(10));
-    console.log(`DEBUG:numberBefore: ${numberBefore.toString()}`)
+    // console.log(`DEBUG:numberBefore: ${numberBefore.toString()}`)
     // check the initial state matches what we expect
     const rootBefore = leafWitness.calculateRoot(numberBefore);
-    console.log(`DEBUG:rootBefore: ${rootBefore.toString()}`)
+    // console.log(`DEBUG:rootBefore: ${rootBefore.toString()}`)
     // dont need this ?
     // rootBefore.assertEquals(initialRoot);
 
     // compute the root after incrementing
     const rootAfter = leafWitness.calculateRoot(numberBefore.add(incrementAmount));
-    console.log(`DEBUG:rootAfter: ${rootAfter.toString()}`)
+    // console.log(`DEBUG:rootAfter: ${rootAfter.toString()}`)
     // set the new root
     this.treeRoot.set(rootAfter);
   }
