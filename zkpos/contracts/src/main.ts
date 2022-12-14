@@ -3,21 +3,8 @@ import {
     Mina,
     isReady,
     shutdown,
-    Bool,
-    UInt32,
-    UInt64,
-    Int64,
-    Character,
-    CircuitString,
     PrivateKey,
-    PublicKey,
-    Signature,
-    Poseidon,
     Field,
-    CircuitValue,
-    prop,
-    arrayProp,
-    Circuit,
     MerkleWitness,
     MerkleTree,
     AccountUpdate
@@ -124,7 +111,7 @@ async function main() {
 
         const tree = new MerkleTree(height);
         console.log(`New merkletree: ${JSON.stringify(tree)}`);
-        class MerkleWitness20 extends MerkleWitness(height) { }
+        // class MerkleWitness20 extends MerkleWitness(height) { }
 
         const zkapp = new BasicMerkleTreeContract(basicTreeZkAppAddress);
 

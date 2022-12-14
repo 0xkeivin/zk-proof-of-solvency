@@ -7,16 +7,11 @@ import {
   DeployArgs,
   Permissions,
   MerkleWitness,
-  MerkleTree,
   Poseidon,
-  PublicKey,
-  Signature,
-  Circuit,
   Struct,
-  Bool,
-  UInt32,
+  Circuit,
+  Bool
 } from 'snarkyjs';
-import { Witness } from 'snarkyjs/dist/node/lib/merkle_tree';
 
 // create a class that accepts tuple of 3 fields
 // and returns a hash of the tuple
@@ -86,16 +81,18 @@ export class BasicMerkleTreeContract extends SmartContract {
     // const calculatedRoot = path.calculateRoot(userAccountVal.accountBalance);
     const calculatedRoot = path.calculateRoot(userAccountVal.hash());
 
-    if (calculatedRoot.toString() === root.toString()) {
-      // console.log(`DEBUG:calculatedRoot: ${calculatedRoot.toString()}`)
-      // console.log(`DEBUG:userAccountVal: ${JSON.stringify(userAccountVal)}`)
-      return true
-    } else {
-      // console.log("DEBUG: NOT MATCHING")
-      return false
-    }
-    // path.calculateRoot(userAccountVal.accountBalance).assertEquals(root);
-    // return true;
+    return Circuit.if( calculatedRoot.equals(root),Bool(true), Bool(false) )
+
+    /// To be removed ? 
+    // if (calculatedRoot.toString() === root.toString()) {
+    //   // console.log(`DEBUG:calculatedRoot: ${calculatedRoot.toString()}`)
+    //   // console.log(`DEBUG:userAccountVal: ${JSON.stringify(userAccountVal)}`)
+    //   return true
+    // } else {
+    //   // console.log("DEBUG: NOT MATCHING")
+    //   return false
+    // }
+
   }
 
 
@@ -110,7 +107,6 @@ export class BasicMerkleTreeContract extends SmartContract {
     // incrementAmount.assertLt(Field(10));
     // console.log(`DEBUG:numberBefore: ${numberBefore.toString()}`)
     // check the initial state matches what we expect
-    const rootBefore = leafWitness.calculateRoot(numberBefore);
     // console.log(`DEBUG:rootBefore: ${rootBefore.toString()}`)
     // dont need this ?
     // rootBefore.assertEquals(initialRoot);
