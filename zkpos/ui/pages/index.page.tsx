@@ -36,18 +36,18 @@ log.setLevel("debug");
 let transactionFee = 0.1;
 
 export default function Home() {
-  const [currentNum, setCurrentNum] = useState<String| undefined>();
+  const [currentNum, setCurrentNum] = useState<String | undefined>();
   const [transactionRes, setTransactionRes] = useState<String | undefined>("");
   const minaNetwork = useRef(Mina);
   const [zkAppPublicKey, setZkAppPublicKey] = useState<PublicKey>();
-
+  const [publicKey, setPublicKey] = useState<PublicKey>();
   let [state, setState] = useState({
     zkappWorkerClient: null as null | ZkappWorkerClient,
     hasWallet: null as null | boolean,
     hasBeenSetup: false,
     accountExists: false,
     // currentNum: null as null | Field,
-    publicKey: null as null | PublicKey,
+    // publicKey: null as null | PublicKey,
     zkappPublicKey: null as null | PublicKey,
     creatingTransaction: false,
   });
@@ -110,13 +110,13 @@ export default function Home() {
         }
 
         const publicKeyBase58: string = (await mina.requestAccounts())[0];
-        const publicKey = PublicKey.fromBase58(publicKeyBase58);
-
-        console.log("using key", publicKey.toBase58());
+        const publicKeyVal = PublicKey.fromBase58(publicKeyBase58);
+        setPublicKey(publicKeyVal);
+        console.log("using key", publicKeyVal.toBase58());
 
         console.log("checking if account exists...");
         const res = await zkappWorkerClient.fetchAccount({
-          publicKey: publicKey!,
+          publicKey: publicKeyVal!,
         });
         const accountExists = res.error == null;
 
@@ -144,7 +144,7 @@ export default function Home() {
           zkappWorkerClient,
           hasWallet: true,
           hasBeenSetup: true,
-          publicKey,
+          // publicKey,
           zkappPublicKey,
           accountExists,
           // currentNum,
@@ -163,7 +163,7 @@ export default function Home() {
         for (;;) {
           console.log("checking if account exists...");
           const res = await state.zkappWorkerClient!.fetchAccount({
-            publicKey: state.publicKey!,
+            publicKey: publicKey!,
           });
           const accountExists = res.error == null;
           if (accountExists) {
@@ -190,10 +190,11 @@ export default function Home() {
     });
     const currentNumVal = (await state.zkappWorkerClient?.getNum()) as Field;
 
-    log.debug(`currentNumVal: ${currentNumVal}`);
     if (currentNumVal) {
       // state.currentNum = currentNum;
-      setCurrentNum(currentNum);
+      log.debug(`currentNumVal: ${currentNumVal}`);
+      setCurrentNum(currentNumVal.toString());
+      // setCurrentNum(currentNum);
     }
   };
   // create button click handler
@@ -241,29 +242,37 @@ export default function Home() {
                     {shortenAddress(zkAppAddress)} <ExternalLinkIcon mx="2px" />
                   </Link>
                 </HStack>
+                <HStack>
+                  <Text as="b">User's Address: </Text>
+                  {publicKey?.toBase58()}
+                </HStack>
               </CardBody>
             </Card>
           </HStack>
           <Spacer p="1" />
-          <StateCard
-            buttonName="Get State"
-            clickHandler={getStateHandler}
-          >
-            {currentNum}
+          <StateCard buttonName="Get State" clickHandler={getStateHandler}>
+            {currentNum ? currentNum.toString() : "No state yet"}
             {/* {state.currentNum?.toString()} */}
           </StateCard>
           <Spacer p="1" />
           <StateCard buttonName="Update State" clickHandler={setStateHandler}>
-            Transaction sent! See transaction at:{" "}
-            <Link
-              href={
-                "https://berkeley.minaexplorer.com/transaction/" +
-                transactionRes?.slice(1, -1)
-              }
-              isExternal
-            >
-               {shortenAddress(transactionRes?.slice(1, -1))} <ExternalLinkIcon mx="2px" />
-            </Link>
+            {transactionRes ? (
+              <>
+                <div>Transaction sent! See transaction at: </div>
+                <Link
+                  href={
+                    "https://berkeley.minaexplorer.com/transaction/" +
+                    transactionRes?.slice(1, -1)
+                  }
+                  isExternal
+                >
+                  {shortenAddress(transactionRes?.slice(1, -1))}{" "}
+                  <ExternalLinkIcon mx="2px" />
+                </Link>
+              </>
+            ) : (
+              "No transactions sent yet"
+            )}
             {/* {transactionRes} */}
           </StateCard>
         </Stack>

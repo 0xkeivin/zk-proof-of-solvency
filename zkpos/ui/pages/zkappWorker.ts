@@ -6,12 +6,11 @@ import {
   Field,
   fetchAccount,
 } from 'snarkyjs'
-
 type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
 
 // ---------------------------------------------------------------------------------------
 
-import type { BasicMerkleTreeContract } from '../../contracts/src/BasicMerkleTreeContract';
+// import type { BasicMerkleTreeContract } from '../../contracts/src/BasicMerkleTreeContract';
 import type { Add } from "../../contracts/src/Add"; const state = {
   // BasicMerkleTreeContract: null as null | typeof BasicMerkleTreeContract,
   Add: null as null | typeof Add,
