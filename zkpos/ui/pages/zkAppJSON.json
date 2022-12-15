@@ -1,0 +1,69 @@
+{
+  "publicKey": "B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV",
+  "nonce": "1",
+  "balance": "48900000000",
+  "appState": ["3", "0", "0", "0", "0", "0", "0", "0"],
+  "permissions": {
+    "editState": {
+      "constant": false,
+      "signatureNecessary": false,
+      "signatureSufficient": false
+    },
+    "send": {
+      "constant": false,
+      "signatureNecessary": true,
+      "signatureSufficient": true
+    },
+    "receive": {
+      "constant": true,
+      "signatureNecessary": false,
+      "signatureSufficient": true
+    },
+    "setDelegate": {
+      "constant": false,
+      "signatureNecessary": true,
+      "signatureSufficient": true
+    },
+    "setPermissions": {
+      "constant": false,
+      "signatureNecessary": true,
+      "signatureSufficient": true
+    },
+    "setVerificationKey": {
+      "constant": false,
+      "signatureNecessary": true,
+      "signatureSufficient": true
+    },
+    "setZkappUri": {
+      "constant": false,
+      "signatureNecessary": true,
+      "signatureSufficient": true
+    },
+    "editSequenceState": {
+      "constant": false,
+      "signatureNecessary": false,
+      "signatureSufficient": false
+    },
+    "setTokenSymbol": {
+      "constant": false,
+      "signatureNecessary": true,
+      "signatureSufficient": true
+    },
+    "incrementNonce": {
+      "constant": false,
+      "signatureNecessary": true,
+      "signatureSufficient": true
+    },
+    "setVotingFor": {
+      "constant": false,
+      "signatureNecessary": true,
+      "signatureSufficient": true
+    }
+  },
+  "sequenceState": "12935064460869035604753254773225484359407575580289870070671311469994328713165",
+  "receiptChainHash": "24730283716387184899051019966519650492129860814465573903884027082569511341148",
+  "delegate": "B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV",
+  "tokenId": "1",
+  "tokenSymbol": "",
+  "verificationKey": "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"
+}
