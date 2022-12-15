@@ -1,0 +1,75 @@
+{
+  "feePayer": {
+    "body": {
+      "publicKey": "B62qiTKpEPjGTSHZrtM8uXiKgn8So916pLmNJKDhKeyBQL9TDb3nvBG",
+      "fee": "0",
+      "validUntil": null,
+      "nonce": "0"
+    },
+    "authorization": "7mWxjLYgbJUkZNcGouvhVj5tJ8yu9hoexb9ntvPK8t5LHqzmrL6QJjjKtf5SgmxB4QWkDw7qoMMbbNGtHVpsbJHPyTy2EzRQ"
+  },
+  "accountUpdates": [
+    {
+      "body": {
+        "publicKey": "B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV",
+        "tokenId": "wSHV2S4qX9jFsLjQo8r1BsMLH2ZRKsZx6EJd1sbozGPieEC4Jf",
+        "update": {
+          "appState": ["5", null, null, null, null, null, null, null],
+          "delegate": null,
+          "verificationKey": null,
+          "permissions": null,
+          "zkappUri": null,
+          "tokenSymbol": null,
+          "timing": null,
+          "votingFor": null
+        },
+        "balanceChange": { "magnitude": "0", "sgn": "Positive" },
+        "incrementNonce": false,
+        "events": [],
+        "sequenceEvents": [],
+        "callData": "10940271503404508705338069942533867386190021096996568904638368177549866850978",
+        "callDepth": 0,
+        "preconditions": {
+          "network": {
+            "snarkedLedgerHash": null,
+            "timestamp": null,
+            "blockchainLength": null,
+            "minWindowDensity": null,
+            "totalCurrency": null,
+            "globalSlotSinceHardFork": null,
+            "globalSlotSinceGenesis": null,
+            "stakingEpochData": {
+              "ledger": { "hash": null, "totalCurrency": null },
+              "seed": null,
+              "startCheckpoint": null,
+              "lockCheckpoint": null,
+              "epochLength": null
+            },
+            "nextEpochData": {
+              "ledger": { "hash": null, "totalCurrency": null },
+              "seed": null,
+              "startCheckpoint": null,
+              "lockCheckpoint": null,
+              "epochLength": null
+            }
+          },
+          "account": {
+            "balance": null,
+            "nonce": null,
+            "receiptChainHash": null,
+            "delegate": null,
+            "state": ["3", null, null, null, null, null, null, null],
+            "sequenceState": null,
+            "provedState": null,
+            "isNew": null
+          }
+        },
+        "useFullCommitment": false,
+        "caller": "wSHV2S4qX9jFsLjQo8r1BsMLH2ZRKsZx6EJd1sbozGPieEC4Jf",
+        "authorizationKind": "Proof"
+      },
+      "authorization": { "proof": null, "signature": null }
+    }
+  ],
+  "memo": "E4YM2vTHhWEg66xpj52JErHUBU4pZ1yageL4TVDDpTTSsv8mK6YaH"
+}

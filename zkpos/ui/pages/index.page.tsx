@@ -29,6 +29,7 @@ import { updateAddContract } from "../utils/updateAddContract";
 log.setLevel("debug");
 export default function Home() {
   const [accountState, setAccountState] = useState<String | undefined>("");
+  const [transactionRes, setTransactionRes] = useState<String | undefined>("");
   const minaNetwork = useRef(Mina);
 
   // Fetch the account from Berkeley Testnet
@@ -82,6 +83,14 @@ export default function Home() {
   // create button click handler
   const setStateHandler = async () => {
     log.info("setStateHandler: Clicked");
+    const updateAddContractRes = await updateAddContract(
+      minaNetwork.current,
+      zkAppAddress
+    );
+    if (updateAddContractRes) {
+      setTransactionRes(updateAddContractRes);
+    }
+    log.info(`updateAddContractRes: ${updateAddContractRes}`);
   };
   return (
     <>
@@ -116,7 +125,7 @@ export default function Home() {
           </StateCard>
           <Spacer p="1" />
           <StateCard buttonName="Update State" clickHandler={setStateHandler}>
-            {accountState}
+            {JSON.stringify(transactionRes)}
           </StateCard>
         </Stack>
       </ChakraProvider>
