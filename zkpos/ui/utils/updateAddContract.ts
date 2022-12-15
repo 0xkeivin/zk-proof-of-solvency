@@ -78,11 +78,12 @@ export const onSendTransaction = async (zkAppPublicKey: PublicKey,
             memo: '',
         },
     });
-
+    const message = `Transaction sent! See transaction at https://berkeley.minaexplorer.com/transaction/${hash}`;
     console.log(
-        'See transaction at https://berkeley.minaexplorer.com/transaction/' + hash
+        message
     );
-    return transactionJSON
+    // return transactionJSON
+    return message
 
     // setState({ ...state, creatingTransaction: false });
 }

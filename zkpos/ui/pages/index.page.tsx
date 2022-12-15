@@ -146,6 +146,7 @@ export default function Home() {
         });
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
 
