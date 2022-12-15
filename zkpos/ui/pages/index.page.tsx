@@ -19,9 +19,13 @@ import {
   CardBody,
   Divider,
   HStack,
+  Heading,
   Link,
   Stack,
+  Spacer,
+  Text,
   VStack,
+  CardHeader,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import StateCard from "../components/StateCard";
@@ -89,8 +93,13 @@ export default function Home() {
   return (
     <>
       <ChakraProvider>
-        <h1>Homepage served from index.page.tsx</h1>
+        <Card align="center">
+          <CardHeader>
+            <Heading>zkProof of Solvency</Heading>
+          </CardHeader>
+        </Card>
         <Stack align="center">
+          <Spacer p="4" />
           <HStack>
             <Card width="md" bg="gray.200">
               <CardBody>
@@ -108,10 +117,11 @@ export default function Home() {
               </CardBody>
             </Card>
           </HStack>
+          <Spacer p="1" />
           <StateCard buttonName="Get State" clickHandler={getStateHandler}>
             {accountState}
           </StateCard>
-          <Divider orientation="vertical" />
+          <Spacer p="1" />
           <StateCard buttonName="Update State" clickHandler={setStateHandler}>
             {accountState}
           </StateCard>
