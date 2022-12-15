@@ -12,8 +12,19 @@ import {
 } from "snarkyjs";
 import log from "loglevel";
 import ZkappWorkerClient from "./zkappWorkerClient";
-import { Button, Card, CardBody, HStack, Link } from "@chakra-ui/react";
+import {
+  Button,
+  Card,
+  ChakraProvider,
+  CardBody,
+  Divider,
+  HStack,
+  Link,
+  Stack,
+  VStack,
+} from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import StateCard from "../components/StateCard";
 // set log level
 log.setLevel("debug");
 export default function Home() {
@@ -55,8 +66,8 @@ export default function Home() {
     })();
   }, []);
   // create button click handler
-  const handleClick = async () => {
-    log.info("handleClick: Clicked");
+  const getStateHandler = async () => {
+    log.info("getStateHandler: Clicked");
     const { account } = await fetchAccount({
       publicKey: PublicKey.fromBase58(zkAppAddress),
     });
@@ -66,6 +77,10 @@ export default function Home() {
       setAccountState(accState);
     }
   };
+  // create button click handler
+  const setStateHandler = async () => {
+    log.info("setStateHandler: Clicked");
+  };
   // create a function that shortens the public key
   const shortenAddress = (address: string) => {
     return address.slice(0, 5) + "..." + address.slice(-5);
@@ -73,33 +88,35 @@ export default function Home() {
 
   return (
     <>
-      <h1>Homepage served from index.page.tsx</h1>
-      <Card>
-        <CardBody>
+      <ChakraProvider>
+        <h1>Homepage served from index.page.tsx</h1>
+        <Stack align="center">
           <HStack>
-            <div>zkApp Address: </div>
-            <Link
-              href={"https://berkeley.minaexplorer.com/wallet/" + zkAppAddress}
-              isExternal
-            >
-              {shortenAddress(zkAppAddress)} <ExternalLinkIcon mx="2px" />
-            </Link>
+            <Card width="md" bg="gray.200">
+              <CardBody>
+                <HStack>
+                  <div>zkApp Address: </div>
+                  <Link
+                    href={
+                      "https://berkeley.minaexplorer.com/wallet/" + zkAppAddress
+                    }
+                    isExternal
+                  >
+                    {shortenAddress(zkAppAddress)} <ExternalLinkIcon mx="2px" />
+                  </Link>
+                </HStack>
+              </CardBody>
+            </Card>
           </HStack>
-        </CardBody>
-      </Card>
-      <HStack spacing={10}>
-        <Button
-          colorScheme="teal"
-          variant="outline"
-          onClick={handleClick}
-          id="testButton"
-        >
-          Get State
-        </Button>
-        <Card>
-          <CardBody>{accountState}</CardBody>
-        </Card>
-      </HStack>
+          <StateCard buttonName="Get State" clickHandler={getStateHandler}>
+            {accountState}
+          </StateCard>
+          <Divider orientation="vertical" />
+          <StateCard buttonName="Update State" clickHandler={setStateHandler}>
+            {accountState}
+          </StateCard>
+        </Stack>
+      </ChakraProvider>
     </>
   );
 }
