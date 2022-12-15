@@ -12,10 +12,16 @@ import {
 } from "snarkyjs";
 import log from "loglevel";
 import ZkappWorkerClient from "./zkappWorkerClient";
-
+import { Button, Card, CardBody, HStack } from "@chakra-ui/react";
 // set log level
 log.setLevel("debug");
 export default function Home() {
+  const [accountState, setAccountState] = useState<String | undefined>("");
+  // Fetch the account from Berkeley Testnet
+  // Sample contract: B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV
+  // My deployed contract: B62qrRt1HpXupeJJef3GkRXKAoZi2iiajzJjxXJGtp8qqeNoQNm6g8Q
+  const zkAppAddress =
+    "B62qrRt1HpXupeJJef3GkRXKAoZi2iiajzJjxXJGtp8qqeNoQNm6g8Q";
   // create useEffect hook to run code on page load
   useEffect(() => {
     // create async function to run code
@@ -33,31 +39,49 @@ export default function Home() {
         "../../contracts/build/src/"
       );
       const { Add } = await import("../../contracts/build/src/");
-      // Fetch the account from Berkeley Testnet
-      // Sample contract: B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV
-      // My deployed contract: B62qrRt1HpXupeJJef3GkRXKAoZi2iiajzJjxXJGtp8qqeNoQNm6g8Q
-      const zkAppAddress =
-        "B62qrRt1HpXupeJJef3GkRXKAoZi2iiajzJjxXJGtp8qqeNoQNm6g8Q";
+
       // This should be removed once the zkAppAddress is updated.
       if (!zkAppAddress) {
         log.error(
           'The following error is caused because the zkAppAddress has an empty string as the public key. Update the zkAppAddress with the public key for your zkApp account, or try this address for an example "Add" smart contract that we deployed to Berkeley Testnet: B62qqkb7hD1We6gEfrcqosKt9C398VLp1WXeTo1i9boPoqF7B1LxHg4'
         );
       }
-      let { account, error } = await fetchAccount({
-        publicKey: PublicKey.fromBase58(zkAppAddress),
-      });
-      log.info(`zkApp JSON: ${JSON.stringify(account)}`);
-      log.info(`zkApp state: ${JSON.stringify(account?.appState)}`);
-      
-      log.info(`error: ${error}`);
+      // log.info(`zkApp JSON: ${JSON.stringify(account)}`);
+      // log.info(`zkApp state: ${JSON.stringify(account?.appState)}`);
+
+      // log.info(`error: ${error}`);
       // await Add.compile();
     })();
   }, []);
+  // create button click handler
+  const handleClick = async () => {
+    log.info("handleClick: Clicked");
+    const { account } = await fetchAccount({
+      publicKey: PublicKey.fromBase58(zkAppAddress),
+    });
+    log.debug(`account: ${JSON.stringify(account)}`);
+    const accState = account?.appState?.toString();
+    if (accState) {
+      setAccountState(accState);
+    }
+  };
 
   return (
     <>
       <h1>Homepage served from index.page.tsx</h1>
+      <HStack spacing={10}>
+        <Button
+          colorScheme="teal"
+          variant="outline"
+          onClick={handleClick}
+          id="testButton"
+        >
+          Get State
+        </Button>
+        <Card>
+          <CardBody>{accountState}</CardBody>
+        </Card>
+      </HStack>
     </>
   );
 }
