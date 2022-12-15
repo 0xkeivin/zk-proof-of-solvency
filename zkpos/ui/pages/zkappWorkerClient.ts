@@ -29,13 +29,13 @@ export default class ZkappWorkerClient {
   // getTreeRoot() {
   //   return this._call('getTreeRoot', {});
   // }
-  // loadContract() {
-  //   return this._call('loadContract', {});
-  // }
+  loadContract() {
+    return this._call('loadContract', {});
+  }
 
-  // compileContract() {
-  //   return this._call('compileContract', {});
-  // }
+  compileContract() {
+    return this._call('compileContract', {});
+  }
 
   fetchAccount({ publicKey }: { publicKey: PublicKey }): ReturnType<typeof fetchAccount> {
     const result = this._call('fetchAccount', { publicKey58: publicKey.toBase58() });
@@ -43,7 +43,9 @@ export default class ZkappWorkerClient {
   }
 
   initZkappInstance(publicKey: PublicKey) {
-    return this._call('initZkappInstance', { publicKey58: publicKey.toBase58() });
+    return this._call("initZkappInstance", {
+      publicKey58: publicKey.toBase58(),
+    });
   }
 
   // async getNum(): Promise<Field> {
@@ -51,9 +53,9 @@ export default class ZkappWorkerClient {
   //   return Field.fromJSON(JSON.parse(result as string));
   // }
 
-  // createUpdateTransaction() {
-  //   return this._call('createUpdateTransaction', {});
-  // }
+  createUpdateTransaction() {
+    return this._call('createUpdateTransaction', {});
+  }
 
   proveUpdateTransaction() {
     return this._call('proveUpdateTransaction', {});

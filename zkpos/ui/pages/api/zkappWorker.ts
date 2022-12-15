@@ -11,7 +11,7 @@ type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
 
 // ---------------------------------------------------------------------------------------
 
-import type { BasicMerkleTreeContract } from '../../contracts/src/BasicMerkleTreeContract';
+// import type { BasicMerkleTreeContract } from '../../contracts/src/BasicMerkleTreeContract';
 
 const state = {
   BasicMerkleTreeContract: null as null | typeof BasicMerkleTreeContract,
