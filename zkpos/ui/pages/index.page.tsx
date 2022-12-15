@@ -12,7 +12,8 @@ import {
 } from "snarkyjs";
 import log from "loglevel";
 import ZkappWorkerClient from "./zkappWorkerClient";
-import { Button, Card, CardBody, HStack } from "@chakra-ui/react";
+import { Button, Card, CardBody, HStack, Link } from "@chakra-ui/react";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 // set log level
 log.setLevel("debug");
 export default function Home() {
@@ -65,10 +66,27 @@ export default function Home() {
       setAccountState(accState);
     }
   };
+  // create a function that shortens the public key
+  const shortenAddress = (address: string) => {
+    return address.slice(0, 5) + "..." + address.slice(-5);
+  };
 
   return (
     <>
       <h1>Homepage served from index.page.tsx</h1>
+      <Card>
+        <CardBody>
+          <HStack>
+            <div>zkApp Address: </div>
+            <Link
+              href={"https://berkeley.minaexplorer.com/wallet/" + zkAppAddress}
+              isExternal
+            >
+              {shortenAddress(zkAppAddress)} <ExternalLinkIcon mx="2px" />
+            </Link>
+          </HStack>
+        </CardBody>
+      </Card>
       <HStack spacing={10}>
         <Button
           colorScheme="teal"
