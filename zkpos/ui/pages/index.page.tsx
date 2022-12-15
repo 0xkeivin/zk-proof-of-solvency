@@ -254,15 +254,15 @@ export default function Home() {
           </StateCard>
           <Spacer p="1" />
           <StateCard buttonName="Update State" clickHandler={setStateHandler}>
-            Transaction sent! See transaction at
+            Transaction sent! See transaction at:{" "}
             <Link
               href={
                 "https://berkeley.minaexplorer.com/transaction/" +
-                transactionRes
+                transactionRes?.slice(1, -1)
               }
               isExternal
             >
-              {shortenAddress(transactionRes)} <ExternalLinkIcon mx="2px" />
+               {shortenAddress(transactionRes?.slice(1, -1))} <ExternalLinkIcon mx="2px" />
             </Link>
             {/* {transactionRes} */}
           </StateCard>
