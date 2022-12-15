@@ -12,10 +12,14 @@ import {
   Circuit,
   Bool
 } from 'snarkyjs';
+import type { } from 'snarkyjs/dist/node/snarky'
+import type { } from 'snarkyjs/dist/node/lib/merkle_tree'
 
 // create a class that accepts tuple of 3 fields
 // and returns a hash of the tuple
-export class UserAccount extends Struct({
+
+//@ts-ignore
+export class UserAccount extends Struct  ({
   publicKey: String,
   salt: Number,
   accountBalance: Number,
