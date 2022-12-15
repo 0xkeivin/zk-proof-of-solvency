@@ -6,7 +6,7 @@ import {
   PublicKey,
   fetchAccount,
   setGraphqlEndpoint,
-  Field
+  Field,
 } from "snarkyjs";
 import log from "loglevel";
 import ZkappWorkerClient from "./zkappWorkerClient";
@@ -25,7 +25,10 @@ import {
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import StateCard from "../components/StateCard";
 import { shortenAddress } from "../utils/shortenAddress";
-import { updateAddContract, onSendTransaction } from "../utils/updateAddContract";
+import {
+  updateAddContract,
+  onSendTransaction,
+} from "../utils/updateAddContract";
 
 // set log level
 log.setLevel("debug");
@@ -37,7 +40,7 @@ export default function Home() {
   const [transactionRes, setTransactionRes] = useState<String | undefined>("");
   const minaNetwork = useRef(Mina);
   const [zkAppPublicKey, setZkAppPublicKey] = useState<PublicKey>();
-  
+
   let [state, setState] = useState({
     zkappWorkerClient: null as null | ZkappWorkerClient,
     hasWallet: null as null | boolean,
@@ -48,13 +51,13 @@ export default function Home() {
     zkappPublicKey: null as null | PublicKey,
     creatingTransaction: false,
   });
-  
+
   // Fetch the account from Berkeley Testnet
   // Sample contract: B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV
   // My deployed contract: B62qrRt1HpXupeJJef3GkRXKAoZi2iiajzJjxXJGtp8qqeNoQNm6g8Q
   const zkAppAddress =
     "B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV";
-    // create useEffect hook to run code on page load
+  // create useEffect hook to run code on page load
   // useEffect(() => {
   //   // create async function to run code
   //   (async () => {
@@ -92,10 +95,10 @@ export default function Home() {
     (async () => {
       if (!state.hasBeenSetup) {
         const zkappWorkerClient = new ZkappWorkerClient();
-        
-        console.log('Loading SnarkyJS...');
+
+        console.log("Loading SnarkyJS...");
         await zkappWorkerClient.loadSnarkyJS();
-        console.log('done');
+        console.log("done");
 
         await zkappWorkerClient.setActiveInstanceToBerkeley();
 
@@ -106,59 +109,62 @@ export default function Home() {
           return;
         }
 
-        const publicKeyBase58 : string = (await mina.requestAccounts())[0];
+        const publicKeyBase58: string = (await mina.requestAccounts())[0];
         const publicKey = PublicKey.fromBase58(publicKeyBase58);
 
-        console.log('using key', publicKey.toBase58());
+        console.log("using key", publicKey.toBase58());
 
-        console.log('checking if account exists...');
-        const res = await zkappWorkerClient.fetchAccount({ publicKey: publicKey! });
+        console.log("checking if account exists...");
+        const res = await zkappWorkerClient.fetchAccount({
+          publicKey: publicKey!,
+        });
         const accountExists = res.error == null;
 
         await zkappWorkerClient.loadContract();
 
-        console.log('compiling zkApp');
+        console.log("compiling zkApp");
         await zkappWorkerClient.compileContract();
-        console.log('zkApp compiled');
+        console.log("zkApp compiled");
 
         // demo with deployed contract
         // const zkappPublicKey = PublicKey.fromBase58('B62qph2VodgSo5NKn9gZta5BHNxppgZMDUihf1g7mXreL4uPJFXDGDA');
-        // test with own deployed contract 
+        // test with own deployed contract
         // const zkappPublicKey = PublicKey.fromBase58('B62qrrHaYLmHvCCa9qoMgYB8ZjZM8VmZUvUQp6EdYT3TqBybePF2qR8');
         const zkappPublicKey = PublicKey.fromBase58(zkAppAddress);
 
         await zkappWorkerClient.initZkappInstance(zkappPublicKey);
 
-        console.log('getting zkApp state...');
-        await zkappWorkerClient.fetchAccount({ publicKey: zkappPublicKey })
-        const currentNum = await zkappWorkerClient.getNum() as Field;
-        console.log('current state:', currentNum?.toString());
+        console.log("getting zkApp state...");
+        await zkappWorkerClient.fetchAccount({ publicKey: zkappPublicKey });
+        const currentNum = (await zkappWorkerClient.getNum()) as Field;
+        console.log("current state:", currentNum?.toString());
 
-        setState({ 
-            ...state, 
-            zkappWorkerClient, 
-            hasWallet: true,
-            hasBeenSetup: true, 
-            publicKey, 
-            zkappPublicKey, 
-            accountExists, 
-            currentNum
+        setState({
+          ...state,
+          zkappWorkerClient,
+          hasWallet: true,
+          hasBeenSetup: true,
+          publicKey,
+          zkappPublicKey,
+          accountExists,
+          currentNum,
         });
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
 
-    // -------------------------------------------------------
+  // -------------------------------------------------------
   // Wait for account to exist, if it didn't
 
   useEffect(() => {
     (async () => {
       if (state.hasBeenSetup && !state.accountExists) {
         for (;;) {
-          console.log('checking if account exists...');
-          const res = await state.zkappWorkerClient!.fetchAccount({ publicKey: state.publicKey! })
+          console.log("checking if account exists...");
+          const res = await state.zkappWorkerClient!.fetchAccount({
+            publicKey: state.publicKey!,
+          });
           const accountExists = res.error == null;
           if (accountExists) {
             break;
@@ -168,6 +174,7 @@ export default function Home() {
         setState({ ...state, accountExists: true });
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.hasBeenSetup]);
   // create button click handler
   // TODO: Fix this
@@ -177,7 +184,7 @@ export default function Home() {
     //   // publicKey: zkAppPublicKey!,
     //   publicKey: state.zkappPublicKey!,
     // });
-    const currentNum = await state.zkappWorkerClient?.getNum() as Field;
+    const currentNum = (await state.zkappWorkerClient?.getNum()) as Field;
 
     log.debug(`currentNum: ${currentNum}`);
     if (currentNum) {
@@ -198,9 +205,9 @@ export default function Home() {
     // }
     // log.info(`updateAddContractRes: ${updateAddContractRes}`);
     const onSendTransactionRes = await onSendTransaction(
-      state.zkappPublicKey!,
+      state.zkappPublicKey!
       // zkAppPublicKey!,
-    )
+    );
     if (onSendTransactionRes) {
       setTransactionRes(JSON.stringify(onSendTransactionRes));
     }
@@ -234,7 +241,10 @@ export default function Home() {
             </Card>
           </HStack>
           <Spacer p="1" />
-          <StateCard buttonName="Get State (Auto Refreshes)" clickHandler={getStateHandler}>
+          <StateCard
+            buttonName="Get State (Auto Refreshes)"
+            clickHandler={getStateHandler}
+          >
             {state.currentNum?.toString()}
           </StateCard>
           <Spacer p="1" />
