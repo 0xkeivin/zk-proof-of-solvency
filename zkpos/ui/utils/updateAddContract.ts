@@ -83,7 +83,7 @@ export const onSendTransaction = async (zkAppPublicKey: PublicKey,
         message
     );
     // return transactionJSON
-    return message
+    return hash
 
     // setState({ ...state, creatingTransaction: false });
 }

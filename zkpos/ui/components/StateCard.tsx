@@ -9,10 +9,11 @@ type StateCardProps = {
 };
 const StateCard = ({ buttonName, clickHandler, children }: StateCardProps) => {
   return (
-    <HStack spacing={10}>
-      <Card width="md" bg="lavender">
+    <HStack spacing={4}>
+      <Card width="xl" bg="lavender">
         <HStack>
-          <CardBody>
+          <CardBody
+          >
             <Button
               colorScheme="messenger"
               onClick={clickHandler}

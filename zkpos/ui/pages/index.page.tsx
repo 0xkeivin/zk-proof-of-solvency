@@ -36,7 +36,7 @@ log.setLevel("debug");
 let transactionFee = 0.1;
 
 export default function Home() {
-  const [accountState, setAccountState] = useState<String | undefined>("");
+  const [currentNum, setCurrentNum] = useState<Field>("");
   const [transactionRes, setTransactionRes] = useState<String | undefined>("");
   const minaNetwork = useRef(Mina);
   const [zkAppPublicKey, setZkAppPublicKey] = useState<PublicKey>();
@@ -184,12 +184,16 @@ export default function Home() {
     //   // publicKey: zkAppPublicKey!,
     //   publicKey: state.zkappPublicKey!,
     // });
+    console.log("getting zkApp state...");
+    await state.zkappWorkerClient?.fetchAccount({
+      publicKey: state.zkappPublicKey!,
+    });
     const currentNum = (await state.zkappWorkerClient?.getNum()) as Field;
 
     log.debug(`currentNum: ${currentNum}`);
     if (currentNum) {
       state.currentNum = currentNum;
-      // setAccountState(currentNum);
+      setCurrentNum(currentNum);
     }
   };
   // create button click handler
@@ -224,7 +228,7 @@ export default function Home() {
         <Stack align="center">
           <Spacer p="4" />
           <HStack>
-            <Card width="md" bg="gray.200">
+            <Card width="xl" bg="gray.200">
               <CardBody>
                 <HStack>
                   <Text as="b">zkApp Address: </Text>
@@ -242,14 +246,24 @@ export default function Home() {
           </HStack>
           <Spacer p="1" />
           <StateCard
-            buttonName="Get State (Auto Refreshes)"
+            buttonName="Get State"
             clickHandler={getStateHandler}
           >
-            {state.currentNum?.toString()}
+            {currentNum}
           </StateCard>
           <Spacer p="1" />
           <StateCard buttonName="Update State" clickHandler={setStateHandler}>
-            {JSON.stringify(transactionRes)}
+            Transaction sent! See transaction at
+            <Link
+              href={
+                "https://berkeley.minaexplorer.com/transaction/" +
+                transactionRes
+              }
+              isExternal
+            >
+              {shortenAddress(transactionRes)} <ExternalLinkIcon mx="2px" />
+            </Link>
+            {/* {transactionRes} */}
           </StateCard>
         </Stack>
       </ChakraProvider>
