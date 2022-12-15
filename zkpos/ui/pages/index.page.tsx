@@ -36,7 +36,7 @@ log.setLevel("debug");
 let transactionFee = 0.1;
 
 export default function Home() {
-  const [currentNum, setCurrentNum] = useState<Field>("");
+  const [currentNum, setCurrentNum] = useState<String| undefined>();
   const [transactionRes, setTransactionRes] = useState<String | undefined>("");
   const minaNetwork = useRef(Mina);
   const [zkAppPublicKey, setZkAppPublicKey] = useState<PublicKey>();
@@ -46,7 +46,7 @@ export default function Home() {
     hasWallet: null as null | boolean,
     hasBeenSetup: false,
     accountExists: false,
-    currentNum: null as null | Field,
+    // currentNum: null as null | Field,
     publicKey: null as null | PublicKey,
     zkappPublicKey: null as null | PublicKey,
     creatingTransaction: false,
@@ -138,7 +138,7 @@ export default function Home() {
         await zkappWorkerClient.fetchAccount({ publicKey: zkappPublicKey });
         const currentNum = (await zkappWorkerClient.getNum()) as Field;
         console.log("current state:", currentNum?.toString());
-
+        setCurrentNum(currentNum?.toString());
         setState({
           ...state,
           zkappWorkerClient,
@@ -147,7 +147,7 @@ export default function Home() {
           publicKey,
           zkappPublicKey,
           accountExists,
-          currentNum,
+          // currentNum,
         });
       }
     })();
@@ -188,11 +188,11 @@ export default function Home() {
     await state.zkappWorkerClient?.fetchAccount({
       publicKey: state.zkappPublicKey!,
     });
-    const currentNum = (await state.zkappWorkerClient?.getNum()) as Field;
+    const currentNumVal = (await state.zkappWorkerClient?.getNum()) as Field;
 
-    log.debug(`currentNum: ${currentNum}`);
-    if (currentNum) {
-      state.currentNum = currentNum;
+    log.debug(`currentNumVal: ${currentNumVal}`);
+    if (currentNumVal) {
+      // state.currentNum = currentNum;
       setCurrentNum(currentNum);
     }
   };
@@ -250,6 +250,7 @@ export default function Home() {
             clickHandler={getStateHandler}
           >
             {currentNum}
+            {/* {state.currentNum?.toString()} */}
           </StateCard>
           <Spacer p="1" />
           <StateCard buttonName="Update State" clickHandler={setStateHandler}>
