@@ -172,15 +172,16 @@ export default function Home() {
   // TODO: Fix this
   const getStateHandler = async () => {
     log.info("getStateHandler: Clicked");
-    const { account } = await fetchAccount({
-      // publicKey: zkAppPublicKey!,
-      publicKey: state.zkappPublicKey!,
+    // const { account } = await fetchAccount({
+    //   // publicKey: zkAppPublicKey!,
+    //   publicKey: state.zkappPublicKey!,
+    // });
+    const currentNum = await state.zkappWorkerClient?.getNum() as Field;
 
-    });
-    log.debug(`account: ${JSON.stringify(account)}`);
-    const accState = account?.appState?.toString();
-    if (accState) {
-      setAccountState(accState);
+    log.debug(`currentNum: ${currentNum}`);
+    if (currentNum) {
+      state.currentNum = currentNum;
+      // setAccountState(currentNum);
     }
   };
   // create button click handler
