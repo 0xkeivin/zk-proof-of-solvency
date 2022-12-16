@@ -211,7 +211,7 @@ export default function Home() {
                   </Link>
                 </HStack>
                 <HStack>
-                  <Text as="b">User's Address: </Text>
+                  <Text as="b">User Address: </Text>
                   {publicKey?.toBase58()}
                 </HStack>
               </CardBody>
