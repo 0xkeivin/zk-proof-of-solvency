@@ -1,10 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import type { BasicMerkleTreeContract } from "../../contracts/src/";
-import {
-  Mina,
-  PublicKey,
-  Field,
-} from "snarkyjs";
+import { Mina, PublicKey, Field } from "snarkyjs";
 import log from "loglevel";
 import ZkappWorkerClient from "./zkappWorkerClient";
 import {
@@ -26,17 +22,29 @@ import {
   updateAddContract,
   onSendTransaction,
 } from "../utils/updateAddContract";
-import {createTree} from "../utils/merkleTree";
-import { UserAccount } from '../../contracts/build/src/BasicMerkleTreeContract'
+import { createTree, UserAccount } from "../utils/merkleTree";
+// import { UserAccount } from '../../contracts/build/src/BasicMerkleTreeContract'
+// import { UserAccount } from "../../contracts/src/BasicMerkleTreeContract";
+
 // set log level
 log.setLevel("debug");
 
 let transactionFee = 0.1;
-
+// create a type
+// type UserAccount = {
+//   publicKey: String;
+//   salt: Number;
+//   accountBalance: Number;
+// };
+// interface IUserAccount {
+//   publicKey: String;
+//   salt: Number;
+//   accountBalance: Number;
+// }
 export default function Home() {
   const [currentNum, setCurrentNum] = useState<String | undefined>();
   const [transactionRes, setTransactionRes] = useState<String | undefined>("");
-  const [publicKey, setPublicKey] = useState<String| undefined>();
+  const [publicKey, setPublicKey] = useState<String | undefined>();
   let [state, setState] = useState({
     zkappWorkerClient: null as null | ZkappWorkerClient,
     hasWallet: null as null | boolean,
@@ -51,8 +59,23 @@ export default function Home() {
   // My deployed contract: B62qrRt1HpXupeJJef3GkRXKAoZi2iiajzJjxXJGtp8qqeNoQNm6g8Q
   const zkAppAddress =
     "B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV";
- 
-    /// hardcoded user accounts
+
+  /// hardcoded user accounts
+  // const userAccountArray: UserAccount[] = [
+  //   {
+  //     publicKey: "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+  //     salt: 100,
+  //     accountBalance: 0,
+  //   },
+  //   {
+  //     publicKey: "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+  //     salt: 101,
+  //     accountBalance: 100,
+  //   },
+    
+  // ]
+  // create a user with interface
+
     const userAccountArray = [
       new UserAccount("0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
           100,
@@ -201,10 +224,7 @@ export default function Home() {
     // log.info(`updateAddContractRes: ${onSendTransactionRes}`);
 
     /// testing
-    const treeHash = createTree(
-      4,
-      userAccountArray,
-    )
+    const treeHash = createTree(4, userAccountArray);
     log.info(`tree: ${JSON.stringify(treeHash)}`);
   };
   return (

@@ -2,8 +2,10 @@ import {
     MerkleTree,
     Field,
     MerkleWitness,
+    Poseidon,
+    Struct
 } from 'snarkyjs'
-import { UserAccount } from '../../contracts/build/src/BasicMerkleTreeContract'
+// import { UserAccount } from '../../contracts/src/BasicMerkleTreeContract'
 // UserAccount interface
 // export interface UserAccount {
 //     publicKey: string;
@@ -11,8 +13,40 @@ import { UserAccount } from '../../contracts/build/src/BasicMerkleTreeContract'
 //     salt: number;
 // }
 
+export class UserAccount extends Struct  ({
+    publicKey: String,
+    salt: Number,
+    accountBalance: Number,
+  }) {
+    constructor(publicKey: string, salt: number, accountBalance: number) {
+      super({ publicKey, salt, accountBalance });
+      this.publicKey = publicKey;
+      this.salt = salt;
+      this.accountBalance = accountBalance;
+    }
+    // 
+    hash(): Field {
+      const publicKeyField = Field(BigInt(this.publicKey));
+      const saltField = Field(this.salt);
+      const accountBalanceField = Field(this.accountBalance);
+      // console.log(`DEBUG:publicKeyField: ${publicKeyField.toString()}`)
+      // console.log(`DEBUG:accountBalanceField: ${accountBalanceField.toString()}`)
+      // console.log(`DEBUG:saltField: ${saltField.toString()}`)
+  
+      // return Poseidon.hash([saltField, accountBalanceField].flat()
+      return Poseidon.hash(
+        [
+          publicKeyField,
+          saltField,
+          accountBalanceField,
+  
+        ]
+      )
+    }
+  }
+
 // creates a tree 
-export const createTree = (height: number, accounts: UserAccount[]): MerkleTree => {
+export const createTree = (height: number, accounts: any[]): MerkleTree => {
     const tree = new MerkleTree(height);
     // get class
     class MerkleWitness20 extends MerkleWitness(height) { }
