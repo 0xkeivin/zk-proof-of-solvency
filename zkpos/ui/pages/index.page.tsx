@@ -56,7 +56,7 @@ export default function Home() {
   // Sample contract: B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV
   // My deployed contract: B62qrRt1HpXupeJJef3GkRXKAoZi2iiajzJjxXJGtp8qqeNoQNm6g8Q
   const zkAppAddress =
-    "B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV";
+    "B62qrRt1HpXupeJJef3GkRXKAoZi2iiajzJjxXJGtp8qqeNoQNm6g8Q";
  
   // --- copied from tutorial
   useEffect(() => {
@@ -241,7 +241,6 @@ export default function Home() {
             ) : (
               "No transactions sent yet"
             )}
-            {/* {transactionRes} */}
           </StateCard>
         </Stack>
       </ChakraProvider>
