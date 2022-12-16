@@ -19,16 +19,16 @@ export default class ZkappWorkerClient {
     return this._call('setActiveInstanceToBerkeley', {});
   }
 
-  getNum() {
-    return this._call('getNum', {});
+  // getNum() {
+  //   return this._call('getNum', {});
+  // }
+  getTreeHeight() {
+    return this._call('getTreeHeight', {});
   }
-  // getTreeHeight() {
-  //   return this._call('getTreeHeight', {});
-  // }
 
-  // getTreeRoot() {
-  //   return this._call('getTreeRoot', {});
-  // }
+  getTreeRoot() {
+    return this._call('getTreeRoot', {});
+  }
   loadContract() {
     return this._call('loadContract', {});
   }
@@ -53,9 +53,9 @@ export default class ZkappWorkerClient {
   //   return Field.fromJSON(JSON.parse(result as string));
   // }
 
-  createUpdateTransaction() {
-    return this._call('createUpdateTransaction', {});
-  }
+  // createUpdateTransaction() {
+  //   return this._call('createUpdateTransaction', {});
+  // }
 
   proveUpdateTransaction() {
     return this._call('proveUpdateTransaction', {});

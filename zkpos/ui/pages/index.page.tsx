@@ -58,7 +58,7 @@ export default function Home() {
   // Sample contract: B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV
   // My deployed contract: B62qrRt1HpXupeJJef3GkRXKAoZi2iiajzJjxXJGtp8qqeNoQNm6g8Q
   const zkAppAddress =
-    "B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV";
+    "B62qrRt1HpXupeJJef3GkRXKAoZi2iiajzJjxXJGtp8qqeNoQNm6g8Q";
 
   /// hardcoded user accounts
   // const userAccountArray: UserAccount[] = [
@@ -155,8 +155,8 @@ export default function Home() {
 
         console.log("getting zkApp state...");
         await zkappWorkerClient.fetchAccount({ publicKey: zkappPublicKey });
-        const currentNum = (await zkappWorkerClient.getNum()) as Field;
-        console.log("current state:", currentNum?.toString());
+        const currentNum = (await zkappWorkerClient.getTreeHeight()) as Field;
+        console.log("getTreeHeight:", currentNum?.toString());
         setCurrentNum(currentNum?.toString());
         setState({
           ...state,
@@ -202,7 +202,7 @@ export default function Home() {
     await state.zkappWorkerClient?.fetchAccount({
       publicKey: state.zkappPublicKey!,
     });
-    const currentNumVal = (await state.zkappWorkerClient?.getNum()) as Field;
+    const currentNumVal = (await state.zkappWorkerClient?.getTreeHeight()) as Field;
 
     if (currentNumVal) {
       // state.currentNum = currentNum;

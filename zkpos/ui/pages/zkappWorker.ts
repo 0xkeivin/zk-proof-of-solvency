@@ -10,11 +10,12 @@ type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
 
 // ---------------------------------------------------------------------------------------
 
-// import type { BasicMerkleTreeContract } from '../../contracts/src/BasicMerkleTreeContract';
-import type { Add } from "../../contracts/src/Add"; const state = {
+import type { BasicMerkleTreeContract } from '../../contracts/src/BasicMerkleTreeContract';
+// import type { Add } from "../../contracts/src/Add"; 
+const state = {
   // BasicMerkleTreeContract: null as null | typeof BasicMerkleTreeContract,
-  Add: null as null | typeof Add,
-  zkapp: null as null | Add,
+  BasicMerkleTreeContract: null as null | typeof BasicMerkleTreeContract,
+  zkapp: null as null | BasicMerkleTreeContract,
   transaction: null as null | Transaction,
 }
 
@@ -34,11 +35,11 @@ const functions = {
     Mina.setActiveInstance(Berkeley);
   },
   loadContract: async (args: {}) => {
-    const { Add } = await import("../../contracts/build/src/Add.js");
-    state.Add = Add;
+    const { BasicMerkleTreeContract } = await import("../../contracts/build/src/BasicMerkleTreeContract.js");
+    state.BasicMerkleTreeContract = BasicMerkleTreeContract;
   },
   compileContract: async (args: {}) => {
-    await state.Add!.compile();
+    await state.BasicMerkleTreeContract!.compile();
   },
   fetchAccount: async (args: { publicKey58: string }) => {
     const publicKey = PublicKey.fromBase58(args.publicKey58);
@@ -47,32 +48,32 @@ const functions = {
   initZkappInstance: async (args: { publicKey58: string }) => {
     const publicKey = PublicKey.fromBase58(args.publicKey58);
     // state.zkapp = new state.BasicMerkleTreeContract!(publicKey);
-    state.zkapp = new state.Add!(publicKey);
+    state.zkapp = new state.BasicMerkleTreeContract!(publicKey);
 
   },
   // Get value 
-  getNum: async (args: {}) => {
-    const value = await state.zkapp!.num.get();
-    return JSON.stringify(value.toJSON());
-  },
-  // getTreeHeight: async (args: {}) => {
-  //   const treeHeight = await state.zkapp!.treeHeight.get();
-  //   return JSON.stringify(treeHeight.toJSON());
+  // getNum: async (args: {}) => {
+  //   const value = await state.zkapp!.num.get();
+  //   return JSON.stringify(value.toJSON());
   // },
+  getTreeHeight: async (args: {}) => {
+    const treeHeight = await state.zkapp!.treeHeight.get();
+    return JSON.stringify(treeHeight.toJSON());
+  },
 
-  // getTreeRoot: async (args: {}) => {
-  //   const treeRoot = await state.zkapp!.treeRoot.get();
-  //   return JSON.stringify(treeRoot.toJSON());
-  // },
-  createUpdateTransaction: async (args: {}) => {
-    console.log("createUpdateTransaction() called")
-    console.log(`state: ${state.transaction?.toJSON()}`)
-    const transaction = await Mina.transaction(() => {
-      state.zkapp!.update();
-    }
-    );
-    state.transaction = transaction;
+  getTreeRoot: async (args: {}) => {
+    const treeRoot = await state.zkapp!.treeRoot.get();
+    return JSON.stringify(treeRoot.toJSON());
   },
+  // createUpdateTransaction: async (args: {}) => {
+  //   console.log("createUpdateTransaction() called")
+  //   console.log(`state: ${state.transaction?.toJSON()}`)
+  //   const transaction = await Mina.transaction(() => {
+  //     state.zkapp!.update();
+  //   }
+  //   );
+  //   state.transaction = transaction;
+  // },
   proveUpdateTransaction: async (args: {}) => {
     await state.transaction!.prove();
   },
