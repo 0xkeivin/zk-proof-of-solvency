@@ -228,15 +228,29 @@ export default function Home() {
     const treeValRes = createTree(4, userAccountDetailsArray);
     setTreeVal(treeValRes);
     log.info(`INFO: treeVal saved: ${JSON.stringify(treeVal)}`);
+    toast({
+      title: 'Generating Proof and Sending to Blockchain',
+      description: "This might take a while...",
+      status: 'loading',
+      duration: 5000,
+      isClosable: true,
+    })
     /// working - mute to skip sending on chain
-    // const onSendTransactionRes = await onSendTransaction(
-    //   state.zkappPublicKey!,
-    //   treeValRes.getRoot()
-    // );
-    // if (onSendTransactionRes) {
-    //   setTransactionRes(JSON.stringify(onSendTransactionRes));
-    // }
-    // log.info(`updateAddContractRes: ${onSendTransactionRes}`);
+    const onSendTransactionRes = await onSendTransaction(
+      state.zkappPublicKey!,
+      treeValRes.getRoot()
+    );
+    if (onSendTransactionRes) {
+      setTransactionRes(JSON.stringify(onSendTransactionRes));
+      toast({
+        title: 'Proof Generated and Sent to Blockchain!',
+        description: "Check the transaction hash in the console",
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+    log.info(`updateAddContractRes: ${onSendTransactionRes}`);
   };
   //Function to take the value of an input and set it state
   const addressInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -259,6 +273,13 @@ export default function Home() {
     log.info("processAddressHandler: Clicked");
     const addressArray = addressValue?.toString().split(",");
     if (addressArray) {
+      toast({
+        title: 'Fetching Account Details',
+        description: "This might take a while",
+        status: 'loading',
+        duration: 5000,
+        isClosable: true,
+      })
       for (const addr of addressArray) {
         const cleanerAddr = addr.trim();
         const ethBal = await getEthBalance(cleanerAddr);
@@ -294,6 +315,11 @@ export default function Home() {
       `userAccountDetailsArray: ${JSON.stringify(userAccountDetailsArray)}`
     );
   };
+  const clearHandler = () => {
+    log.info("clearHandler: Clicked");
+    setAddressValue("");
+    setUserAccountArrayDetails([]);
+  }
   // for checking inclusion
   const inclusionValueHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -302,6 +328,13 @@ export default function Home() {
     setInclusionValue(event.target.value);
   };
   const checkInclusionHandler = async () => {
+    toast({
+      title: 'Checking hash inclusion',
+      description: "This relies on off-chain tree data",
+      status: 'loading',
+      duration: 2000,
+      isClosable: true,
+    })
     log.info("checkInclusionHandler: Clicked");
     log.info(`inclusionValue: ${inclusionValue}`);
     // hash the inclusion value 
@@ -329,8 +362,16 @@ export default function Home() {
 
       if (inclusionUserAccountHash.toString() == nodeVal?.toString()) {
         console.log(`Found inclusionUserAccountHash at index: ${i}`);
+        toast({
+          title: 'Proof is valid!',
+          description: "Your funds are safe!",
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
       }
     }
+
 
 
 
@@ -415,8 +456,10 @@ export default function Home() {
             <AddressInput
               buttonName1="Fill Sample Addresses"
               buttonName2="Process Addresses"
+              buttonName3="Clear"
               button1Handler={sampleHandler}
               button2Handler={processAddressHandler}
+              button3Handler={clearHandler}
               onChangeHandler={addressInputHandler}
               placeHolder="Enter comma-separated Ethereum Addresses"
               value={addressValue}

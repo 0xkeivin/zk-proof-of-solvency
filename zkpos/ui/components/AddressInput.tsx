@@ -24,6 +24,8 @@ type AddressInputProps = {
   button1Handler: Function;
   buttonName2?: String;
   button2Handler?: Function;
+  buttonName3?: String;
+  button3Handler?: Function;
   onChangeHandler: Function;
   value: string | number | readonly string[] | undefined;
   placeHolder: string;
@@ -32,9 +34,11 @@ type AddressInputProps = {
 
 const AddressInput = ({
   buttonName1,
-  buttonName2,
-  button2Handler,
   button1Handler,
+  button2Handler,
+  buttonName2,
+  buttonName3,
+  button3Handler,
   onChangeHandler,
   placeHolder,
   value,
@@ -60,7 +64,7 @@ const AddressInput = ({
       <Spacer p="2" />
       <HStack>
         <Button
-          w="14rem"
+          w="12rem"
           colorScheme="teal"
           onClick={(event) => button1Handler(event)}
           id="sampleBtn"
@@ -69,12 +73,22 @@ const AddressInput = ({
         </Button>
         {buttonName2 && button2Handler && (
           <Button
-            w="14rem"
+            w="12rem"
             colorScheme="linkedin"
             onClick={(event) => button2Handler(event)}
             id="processAddrBtn"
           >
             {buttonName2}
+          </Button>
+        )}
+        {buttonName3 && button3Handler && (
+          <Button
+            w="5rem"
+            colorScheme="gray"
+            onClick={(event) => button3Handler(event)}
+            id="button3"
+          >
+            {buttonName3}
           </Button>
         )}
       </HStack>
