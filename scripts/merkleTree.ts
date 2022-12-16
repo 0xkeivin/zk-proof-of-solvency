@@ -16,7 +16,6 @@ concatHashes.concat(hash2);
 // create a new CryptoJS.lib.WordArray
 
 
-tree.ver
 
 // const sumAB = SHA256("ab")  ;
 const wordArray1 = SHA256(concatHashes);
@@ -24,12 +23,15 @@ const wordArray1 = SHA256(concatHashes);
 const wordArrayProof = tree.getProof(concatHashes.toString());
 const verifyWordArray = tree.verify(wordArrayProof, concatHashes.toString(), root);
 
+console.log("\n")
+console.log(`wordArrayProof:${JSON.stringify(wordArrayProof)}`)
+console.log(`verifyWordArray:${verifyWordArray}`);
+console.log("\n")
 
 console.log(`hash1:${hash1}\n`);
 console.log(`hash2:${hash2}\n`);
 console.log(`concatHashes:${concatHashes}\n`);
 console.log(`wordArray1:${wordArray1}\n\n`);
-console.log(verifyWordArray);
 
 // console.log(`leave:${leaves.toString()}\n`);
 console.log(`tree:${tree.toString()}\n`);
