@@ -67,17 +67,17 @@ export default class ZkappWorkerClient {
       updatedVal,
     });
   }
-  checkInclusion(
-    userAccountVal: UserAccount,
-    path: MerkleWitness20
-  ) {
-    return this._call('checkInclusion', {
-      // leafWitness,
-      // previousVal,
-      userAccountVal,
-      path
-    });
-  }
+  // checkInclusion(
+  //   userAccountVal: UserAccount,
+  //   path: MerkleWitness20
+  // ) {
+  //   return this._call('checkInclusion', {
+  //     // leafWitness,
+  //     // previousVal,
+  //     userAccountVal,
+  //     path
+  //   });
+  // }
 
   proveUpdateTransaction() {
     return this._call('proveUpdateTransaction', {});

@@ -75,7 +75,7 @@ const functions = {
     console.log("createUpdateTransaction() called")
     console.log(`state: ${state.transaction?.toJSON()}`)
     // get hash of inclusion proof
-    
+
     const transaction = await Mina.transaction(() => {
       state.zkapp!.updateRoot(
         // args.leafWitness,
@@ -86,21 +86,21 @@ const functions = {
     );
     state.transaction = transaction;
   },
-  checkInclusion: async (args: {
-    userAccountVal: UserAccount,
-    path: MerkleWitness20
-  }) => {
-    console.log("checkInclusion() called")
-    console.log(`state: ${state.transaction?.toJSON()}`)
-    const transaction = await Mina.transaction(() => {
-      state.zkapp!.checkInclusion(
-        args.userAccountVal,
-        args.path
-      );
-    }
-    );
-    state.transaction = transaction;
-  },
+  // checkInclusion: async (args: {
+  //   userAccountVal: UserAccount,
+  //   path: MerkleWitness20
+  // }) => {
+  //   console.log("checkInclusion() called")
+  //   console.log(`state: ${state.transaction?.toJSON()}`)
+  //   const transaction = await Mina.transaction(() => {
+  //     state.zkapp!.checkInclusion(
+  //       args.userAccountVal,
+  //       args.path
+  //     );
+  //   }
+  //   );
+  //   state.transaction = transaction;
+  // },
   proveUpdateTransaction: async (args: {}) => {
     await state.transaction!.prove();
   },
