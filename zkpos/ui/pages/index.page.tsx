@@ -14,6 +14,7 @@ import {
   Spacer,
   Text,
   CardHeader,
+  useToast,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import StateCard from "../components/StateCard";
@@ -61,6 +62,7 @@ export default function Home() {
   const [isProofIncluded, setIsProofIncluded] = useState<Boolean | undefined>()
 
   const [treeVal, setTreeVal] = useState<MerkleTree>();
+  const toast = useToast()
 
   // Fetch the account from Berkeley Testnet
   // Sample contract: B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV
@@ -117,6 +119,13 @@ export default function Home() {
         const publicKeyVal = PublicKey.fromBase58(publicKeyBase58);
         setPublicKey(publicKeyBase58);
         console.log("using key", publicKeyVal.toBase58());
+        toast({
+          title: 'User logged in!',
+          description: "Account looks good!",
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
 
         console.log("checking if account exists...");
         const res = await zkappWorkerClient.fetchAccount({
@@ -203,6 +212,13 @@ export default function Home() {
       setCurrentNum(currentNumVal.toString());
       setCurrentRootHash(currentRootHashVal.toString());
       // setCurrentNum(currentNum);
+      toast({
+        title: 'State Fetched',
+        description: "On-chain state fetched",
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
     }
   };
   // create button click handler
