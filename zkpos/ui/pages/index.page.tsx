@@ -26,6 +26,7 @@ import { createTree, UserAccount } from "../utils/merkleTree";
 import AddressInput from "../components/AddressInput";
 import { getEthBalance } from "../utils/getEthBalance";
 import { getRandNum } from "../utils/getRandNum";
+import CustomDataTable from "../components/DataTable";
 // import { UserAccount } from '../../contracts/build/src/BasicMerkleTreeContract'
 // import { UserAccount } from "../../contracts/src/BasicMerkleTreeContract";
 
@@ -250,14 +251,31 @@ export default function Home() {
           log.info(`${cleanerAddr} is valid`);
           // add user account to array
           // userAccountArray.push(newUserAccount);
-          setUserAccountArrayDetails({
-            ...userAccountDetailsArray,
-            [cleanerAddr]: newUserAccount,
-        });
+          // push value to array
+          log.debug(newUserAccount)
+          // check if value is already in array
+          const isDuplicate = userAccountDetailsArray.some(
+            (userAccount) => userAccount.publicKey === newUserAccount.publicKey
+          );
+          log.debug(`isDuplicate: ${isDuplicate}`);
+          // Todo: First round does get saved for some reason :(
+          if (!isDuplicate){
+            setUserAccountArrayDetails(prevState => {
+              return [
+                ...prevState,
+                newUserAccount,
+              ];
+          });
+
+          }
+
+
         }
       }
     }
-    log.info(`userAccountDetailsArray: ${JSON.stringify(userAccountDetailsArray)}`);
+    log.info(
+      `userAccountDetailsArray: ${JSON.stringify(userAccountDetailsArray)}`
+    );
   };
   return (
     <>
@@ -343,6 +361,12 @@ export default function Home() {
             placeHolder="Enter comma-separated Ethereum Addresses"
             value={addressValue}
           />
+          <Spacer p="1" />
+          {/* <CustomDataTable
+          key="userAccountDetailsArray"
+          recordsType={userAccountDetailsArray}
+          
+          /> */}
         </Stack>
       </ChakraProvider>
     </>
