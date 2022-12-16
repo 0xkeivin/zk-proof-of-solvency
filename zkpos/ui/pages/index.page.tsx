@@ -283,6 +283,7 @@ export default function Home() {
           <StateCard buttonName="Update State" clickHandler={setStateHandler}>
             {transactionRes ? (
               <>
+              
                 <div>Transaction sent! See transaction at: </div>
                 <Link
                   href={
@@ -292,7 +293,7 @@ export default function Home() {
                   isExternal
                 >
                   {shortenAddress(transactionRes?.slice(1, -1))}{" "}
-                  <ExternalLinkIcon mx="2px" />
+                  <ExternalLinkIcon mx="1px" />
                 </Link>
               </>
             ) : (
