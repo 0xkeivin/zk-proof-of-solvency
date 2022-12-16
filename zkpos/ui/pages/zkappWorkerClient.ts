@@ -3,10 +3,12 @@ import {
   PublicKey,
   PrivateKey,
   Field,
+  MerkleWitness
 } from 'snarkyjs'
 
 import type { ZkappWorkerRequest, ZkappWorkerReponse, WorkerFunctions } from './zkappWorker';
 
+class MerkleWitness20 extends MerkleWitness(4) { }
 export default class ZkappWorkerClient {
 
   // ---------------------------------------------------------------------------------------
@@ -53,9 +55,17 @@ export default class ZkappWorkerClient {
   //   return Field.fromJSON(JSON.parse(result as string));
   // }
 
-  // createUpdateTransaction() {
-  //   return this._call('createUpdateTransaction', {});
-  // }
+  createUpdateTransaction(
+    // leafWitness: MerkleWitness20,
+    // previousVal: Field,
+    updatedVal: Field,
+  ) {
+    return this._call('createUpdateTransaction', {
+      // leafWitness,
+      // previousVal,
+      updatedVal,
+    });
+  }
 
   proveUpdateTransaction() {
     return this._call('proveUpdateTransaction', {});

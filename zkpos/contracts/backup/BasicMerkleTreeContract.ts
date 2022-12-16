@@ -86,16 +86,39 @@ export class BasicMerkleTreeContract extends SmartContract {
 
     return Circuit.if( calculatedRoot.equals(root),Bool(true), Bool(false) )
 
+    /// To be removed ? 
+    // if (calculatedRoot.toString() === root.toString()) {
+    //   // console.log(`DEBUG:calculatedRoot: ${calculatedRoot.toString()}`)
+    //   // console.log(`DEBUG:userAccountVal: ${JSON.stringify(userAccountVal)}`)
+    //   return true
+    // } else {
+    //   // console.log("DEBUG: NOT MATCHING")
+    //   return false
+    // }
+
   }
 
 
-  @method updateRoot(
+  @method update(
+    leafWitness: MerkleWitness20,
+    previousVal: Field,
     updatedVal: Field,
   ) {
     const initialRoot = this.treeRoot.get();
     this.treeRoot.assertEquals(initialRoot);
-    // update root
-    this.treeRoot.set(updatedVal);
+    // muted for testing
+    // updatedVal.assertLt(Field(10));
+    // console.log(`DEBUG:previousVal: ${previousVal.toString()}`)
+    // check the initial state matches what we expect
+    // console.log(`DEBUG:rootBefore: ${rootBefore.toString()}`)
+    // dont need this ?
+    // rootBefore.assertEquals(initialRoot);
+
+    // compute the root after incrementing
+    const rootAfter = leafWitness.calculateRoot(previousVal.add(updatedVal));
+    // console.log(`DEBUG:rootAfter: ${rootAfter.toString()}`)
+    // set the new root
+    this.treeRoot.set(rootAfter);
   }
 }
 

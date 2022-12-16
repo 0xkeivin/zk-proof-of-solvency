@@ -1,12 +1,15 @@
 import {
     Mina,
     PublicKey,
-    DeployArgs
+    DeployArgs,
+    MerkleWitness,
+    Field
 } from 'snarkyjs';
 // create a function that updates the state of contract
 import ZkappWorkerClient from '../pages/zkappWorkerClient';
 import type { Add } from '../../contracts/src/Add';
 import getISOTime from './getISOTime';
+class MerkleWitness20 extends MerkleWitness(4) { }
 
 type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
 
@@ -40,6 +43,9 @@ export const updateAddContract = async (
 // Send a transaction
 
 export const onSendTransaction = async (zkAppPublicKey: PublicKey,
+    // leafWitness: MerkleWitness20,
+    // previousVal: Field,
+    updatedVal: Field,
 ) => {
     const zkappWorkerClient = new ZkappWorkerClient();
     const transactionFee = 0.1;
@@ -48,9 +54,9 @@ export const onSendTransaction = async (zkAppPublicKey: PublicKey,
     // setState({ ...state, creatingTransaction: true });
     await zkappWorkerClient.loadContract();
 
-    console.log('compiling zkApp');
+    console.log(`${getISOTime()} - compiling zkApp`);
     await zkappWorkerClient.compileContract();
-    console.log('zkApp compiled');
+    console.log(`${getISOTime()} - zkApp compiled`);
     // await state.zkappWorkerClient!.fetchAccount({ publicKey: state.publicKey! });
     // const publicKey = PublicKey.fromBase58(publicKey58);
     console.log("zkAppPublicKey", zkAppPublicKey);
@@ -60,7 +66,11 @@ export const onSendTransaction = async (zkAppPublicKey: PublicKey,
     await zkappWorkerClient!.fetchAccount({ publicKey: zkAppPublicKey });
 
     // await state.zkappWorkerClient!.createUpdateTransaction();
-    // await zkappWorkerClient!.createUpdateTransaction();
+    await zkappWorkerClient!.createUpdateTransaction(
+        // leafWitness,
+        // previousVal,
+        updatedVal,
+    );
 
     
     console.log(`${getISOTime()} - creating proof...`);

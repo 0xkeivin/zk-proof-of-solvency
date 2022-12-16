@@ -5,6 +5,7 @@ import {
   PrivateKey,
   Field,
   fetchAccount,
+  MerkleWitness
 } from 'snarkyjs'
 type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
 
@@ -20,6 +21,7 @@ const state = {
 }
 
 // ---------------------------------------------------------------------------------------
+class MerkleWitness20 extends MerkleWitness(4) { }
 
 const functions = {
 
@@ -65,15 +67,23 @@ const functions = {
     const treeRoot = await state.zkapp!.treeRoot.get();
     return JSON.stringify(treeRoot.toJSON());
   },
-  // createUpdateTransaction: async (args: {}) => {
-  //   console.log("createUpdateTransaction() called")
-  //   console.log(`state: ${state.transaction?.toJSON()}`)
-  //   const transaction = await Mina.transaction(() => {
-  //     state.zkapp!.update();
-  //   }
-  //   );
-  //   state.transaction = transaction;
-  // },
+  createUpdateTransaction: async (args: {
+    // leafWitness: MerkleWitness20,
+    // previousVal: Field,
+    updatedVal: Field,
+  }) => {
+    console.log("createUpdateTransaction() called")
+    console.log(`state: ${state.transaction?.toJSON()}`)
+    const transaction = await Mina.transaction(() => {
+      state.zkapp!.updateRoot(
+        // args.leafWitness,
+        // args.previousVal,
+        args.updatedVal,
+      );
+    }
+    );
+    state.transaction = transaction;
+  },
   proveUpdateTransaction: async (args: {}) => {
     await state.transaction!.prove();
   },

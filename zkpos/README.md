@@ -20,4 +20,5 @@ zk deploy berkeley
 
 # 1 - https://berkeley.minaexplorer.com/transaction/CkpZDyaAAVhFXZFM9JNmjFoWqF9HasB2WafTRZMMvK3Bbv2m65FsT
 # 2 - https://berkeley.minaexplorer.com/transaction/CkpYiQqEHDbMqk2aMBXwG1osbxvNrPJBQw2PSMgTpDixBaPCSRic1
+# 3 - https://berkeley.minaexplorer.com/transaction/CkpZnXe3KjjfY8j2ysHvyG4FtPk6gWvo1LNawfpW3cCZ4KBQfaP2P
 ```

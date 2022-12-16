@@ -43,6 +43,8 @@ let transactionFee = 0.1;
 // }
 export default function Home() {
   const [currentNum, setCurrentNum] = useState<String | undefined>();
+  const [currentRootHash, setCurrentRootHash] = useState<String | undefined>();
+  
   const [transactionRes, setTransactionRes] = useState<String | undefined>("");
   const [publicKey, setPublicKey] = useState<String | undefined>();
   let [state, setState] = useState({
@@ -156,8 +158,11 @@ export default function Home() {
         console.log("getting zkApp state...");
         await zkappWorkerClient.fetchAccount({ publicKey: zkappPublicKey });
         const currentNum = (await zkappWorkerClient.getTreeHeight()) as Field;
+        const currentRootHashVal = (await zkappWorkerClient.getTreeRoot()) as Field;
         console.log("getTreeHeight:", currentNum?.toString());
+        console.log("getTreeRoot:", currentRootHashVal?.toString());
         setCurrentNum(currentNum?.toString());
+        setCurrentRootHash(currentRootHashVal?.toString());
         setState({
           ...state,
           zkappWorkerClient,
@@ -203,29 +208,33 @@ export default function Home() {
       publicKey: state.zkappPublicKey!,
     });
     const currentNumVal = (await state.zkappWorkerClient?.getTreeHeight()) as Field;
+    const currentRootHashVal = (await state.zkappWorkerClient?.getTreeRoot()) as Field;
 
     if (currentNumVal) {
       // state.currentNum = currentNum;
       log.debug(`currentNumVal: ${currentNumVal}`);
+      log.debug(`currentRootHashVal: ${currentRootHashVal}`);
       setCurrentNum(currentNumVal.toString());
+      setCurrentRootHash(currentRootHashVal.toString());
       // setCurrentNum(currentNum);
     }
   };
   // create button click handler
   const setStateHandler = async () => {
     log.info("setStateHandler: Clicked");
-    /// working
-    // const onSendTransactionRes = await onSendTransaction(
-    //   state.zkappPublicKey!
-    // );
-    // if (onSendTransactionRes) {
-    //   setTransactionRes(JSON.stringify(onSendTransactionRes));
-    // }
-    // log.info(`updateAddContractRes: ${onSendTransactionRes}`);
-
     /// testing
     const treeHash = createTree(4, userAccountArray);
     log.info(`tree: ${JSON.stringify(treeHash)}`);
+    /// working
+    const onSendTransactionRes = await onSendTransaction(
+      state.zkappPublicKey!,
+      treeHash.getRoot()
+    );
+    if (onSendTransactionRes) {
+      setTransactionRes(JSON.stringify(onSendTransactionRes));
+    }
+    log.info(`updateAddContractRes: ${onSendTransactionRes}`);
+
   };
   return (
     <>
@@ -267,7 +276,7 @@ export default function Home() {
           </HStack>
           <Spacer p="1" />
           <StateCard buttonName="Get State" clickHandler={getStateHandler}>
-            {currentNum ? currentNum.toString() : "No state yet"}
+            {(currentNum && currentRootHash) ? currentNum.toString() + ',' + currentRootHash.toString() : "No state yet"}
             {/* {state.currentNum?.toString()} */}
           </StateCard>
           <Spacer p="1" />
