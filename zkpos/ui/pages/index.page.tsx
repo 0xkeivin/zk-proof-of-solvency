@@ -33,24 +33,7 @@ import { getRandNum } from "../utils/getRandNum";
 log.setLevel("debug");
 
 let transactionFee = 0.1;
-// create a type
-// type UserAccount = {
-//   publicKey: String;
-//   salt: Number;
-//   accountBalance: Number;
-// };
-// interface IUserAccount {
-//   publicKey: String;
-//   salt: Number;
-//   accountBalance: Number;
-// }
 
-// create a type to store account balance
-type UserAccountDetails = {
-  publicKey: String;
-  accountBalance: Number;
-  salt: Number;
-};
 export default function Home() {
   const [currentNum, setCurrentNum] = useState<String | undefined>();
   const [currentRootHash, setCurrentRootHash] = useState<String | undefined>();
@@ -233,8 +216,7 @@ export default function Home() {
   };
   //Function to take the value of an input and set it state
   const addressInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // setStark_key(event.target.value);
-    console.log(event.target.value);
+    // log.debug(event.target.value);
     setAddressValue(event.target.value);
   };
   const sampleHandler = async () => {
@@ -254,19 +236,28 @@ export default function Home() {
     const addressArray = addressValue?.toString().split(",");
     if (addressArray) {
       for (const addr of addressArray) {
-        const ethBal = await getEthBalance(addr.trim());
-        console.log(`ethBal: ${addr} - ${ethBal}`);
+        const cleanerAddr = addr.trim();
+        const ethBal = await getEthBalance(cleanerAddr);
         // create user account details
-        const newUserAccount = new UserAccount(addr, getRandNum(), ethBal!);
-        log.info(newUserAccount);
-        // const userAccount: UserAccountDetails = {
-        //   accountBalance: ethBal,
-        //   publicKey: addr,
-        //   salt: getRandNum()
-
-        // }
+        const newUserAccount = new UserAccount(
+          cleanerAddr,
+          getRandNum(),
+          ethBal!
+        );
+        // log.info(newUserAccount);
+        // check if user account is valid
+        if (!Number.isNaN(newUserAccount.accountBalance)) {
+          log.info(`${cleanerAddr} is valid`);
+          // add user account to array
+          // userAccountArray.push(newUserAccount);
+          setUserAccountArrayDetails({
+            ...userAccountDetailsArray,
+            [cleanerAddr]: newUserAccount,
+        });
+        }
       }
     }
+    log.info(`userAccountDetailsArray: ${JSON.stringify(userAccountDetailsArray)}`);
   };
   return (
     <>
@@ -290,7 +281,8 @@ export default function Home() {
                     isExternal
                   >
                     {/* {shortenAddress(zkAppAddress)}  */}
-                    {zkAppAddress}<ExternalLinkIcon mx="2px" />
+                    {zkAppAddress}
+                    <ExternalLinkIcon mx="2px" />
                   </Link>
                 </HStack>
                 <HStack>
@@ -302,7 +294,8 @@ export default function Home() {
                     isExternal
                   >
                     {/* {shortenAddress(publicKey)}  */}
-                    {publicKey}<ExternalLinkIcon mx="2px" />
+                    {publicKey}
+                    <ExternalLinkIcon mx="2px" />
                   </Link>
                 </HStack>
               </CardBody>
