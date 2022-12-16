@@ -25,11 +25,14 @@ const CustomDataTable = (props: Props) => {
       name: "Eth Address",
       selector: (row: any) => row.publicKey,
       sortable: true,
+      wrap: true,
+
     },
     {
       name: "ETH Balance",
       selector: (row: any) => row.accountBalance,
       sortable: true,
+      wrap: true,
     },
     {
       name: "Salt",

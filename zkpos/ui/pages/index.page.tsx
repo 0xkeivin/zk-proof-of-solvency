@@ -52,6 +52,9 @@ export default function Home() {
   const [addressValue, setAddressValue] = useState<
     string | number | readonly string[] | undefined
   >("");
+  const [inclusionValue, setInclusionValue] = useState<
+    string | number | readonly string[] | undefined
+  >("");
   const [userAccountDetailsArray, setUserAccountArrayDetails] = useState<
     UserAccount[]
   >([]);
@@ -277,6 +280,11 @@ export default function Home() {
       `userAccountDetailsArray: ${JSON.stringify(userAccountDetailsArray)}`
     );
   };
+  // for checking inclusion
+  const inclusionValueHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // log.debug(event.target.value);
+    setInclusionValue(event.target.value);
+  };
   return (
     <>
       <ChakraProvider>
@@ -335,7 +343,7 @@ export default function Home() {
           <StateCard buttonName="Update State" clickHandler={setStateHandler}>
             {transactionRes ? (
               <>
-                <div>Transaction sent! See transaction at: </div>
+                Transaction sent! See transaction at:{" "}
                 <Link
                   href={
                     "https://berkeley.minaexplorer.com/transaction/" +
@@ -343,7 +351,8 @@ export default function Home() {
                   }
                   isExternal
                 >
-                  {shortenAddress(transactionRes?.slice(1, -1))}{" "}
+                  {/* {shortenAddress(transactionRes?.slice(1, -1))}{" "} */}
+                  {transactionRes.trim()}
                   <ExternalLinkIcon mx="1px" />
                 </Link>
               </>
@@ -352,6 +361,8 @@ export default function Home() {
             )}
           </StateCard>
           <Spacer p="1" />
+          <HStack>
+
           <AddressInput
             buttonName1="Fill Sample Addresses"
             buttonName2="Process Addresses"
@@ -361,6 +372,16 @@ export default function Home() {
             placeHolder="Enter comma-separated Ethereum Addresses"
             value={addressValue}
           />
+          <AddressInput
+            buttonName1="Fill Sample Addresses"
+            buttonName2="Process Addresses"
+            sampleHandler={sampleHandler}
+            clickHandler={processAddressHandler}
+            onChangeHandler={inclusionValueHandler}
+            placeHolder="Enter an entry to check inclusion"
+            value={inclusionValue}
+          />
+          </HStack>
           <Spacer p="1" />
           <CustomDataTable
           key="userAccountDetailsArray"

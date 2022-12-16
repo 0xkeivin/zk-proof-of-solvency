@@ -42,6 +42,7 @@ const AddressInput = ({
 }: AddressInputProps) => {
   return (
     <VStack
+    width="xl"
       spacing={4}
       direction="row"
       display="flex"
@@ -50,7 +51,7 @@ const AddressInput = ({
       padding={1}
     >
       <Textarea
-        w="50rem"
+        w="30rem"
         h="14rem"
         placeholder={placeHolder}
         onChange={(event) => onChangeHandler(event)}
