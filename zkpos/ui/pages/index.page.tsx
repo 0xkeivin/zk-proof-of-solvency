@@ -45,7 +45,7 @@ let transactionFee = 0.1;
 //   accountBalance: Number;
 // }
 
-// create a type to store account balance 
+// create a type to store account balance
 type UserAccountDetails = {
   publicKey: String;
   accountBalance: Number;
@@ -68,7 +68,9 @@ export default function Home() {
   const [addressValue, setAddressValue] = useState<
     string | number | readonly string[] | undefined
   >("");
-  const [userAccountDetailsArray, setUserAccountArrayDetails] = useState<UserAccount[]>([]);
+  const [userAccountDetailsArray, setUserAccountArrayDetails] = useState<
+    UserAccount[]
+  >([]);
 
   // Fetch the account from Berkeley Testnet
   // Sample contract: B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV
@@ -244,11 +246,9 @@ export default function Home() {
 0xf977814e90da44bfa03b6295a0616a897441acec,
 0xbe0eb53f46cd790cd13851d5eff43d12404d33e8,
 0x59448fe20378357f206880c58068f095ae63d5a5,
-0x36a85757645e8e8aec062a1dee289c7d615901ca`
-    setAddressValue(
-      sampleAddress
-    )
-  }
+0x36a85757645e8e8aec062a1dee289c7d615901ca`;
+    setAddressValue(sampleAddress);
+  };
   const processAddressHandler = async () => {
     log.info("processAddressHandler: Clicked");
     const addressArray = addressValue?.toString().split(",");
@@ -256,13 +256,9 @@ export default function Home() {
       for (const addr of addressArray) {
         const ethBal = await getEthBalance(addr.trim());
         console.log(`ethBal: ${addr} - ${ethBal}`);
-        // create user account details 
-        const newUserAccount= new UserAccount(
-          addr,
-          getRandNum(),
-          ethBal!
-        )
-        log.info(newUserAccount)
+        // create user account details
+        const newUserAccount = new UserAccount(addr, getRandNum(), ethBal!);
+        log.info(newUserAccount);
         // const userAccount: UserAccountDetails = {
         //   accountBalance: ethBal,
         //   publicKey: addr,
