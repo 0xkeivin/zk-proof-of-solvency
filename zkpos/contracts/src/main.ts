@@ -26,7 +26,7 @@ async function insertValuesIntoTree(deployerAccount: PrivateKey, basicTreeZkAppP
         console.log(`DEBUG: leafIndex: ${leafIndex}`)
         // insert value into leaf node
         const witness = new MerkleWitness20(tree.getWitness(BigInt(leafIndex)));
-        // console.log(`DEBUG: witness: ${JSON.stringify(witness)}`)
+        console.log(`DEBUG: witness: ${JSON.stringify(witness)}`)
         const leafValHash = leafValue.hash();
         // console.log(`DEBUG: leafValue.hash(): ${leafValHash}`)
         tree.setLeaf(BigInt(leafIndex), leafValHash);
@@ -34,10 +34,10 @@ async function insertValuesIntoTree(deployerAccount: PrivateKey, basicTreeZkAppP
 
 
         const txn = await Mina.transaction(deployerAccount, () => {
-            zkapp.update(
-                witness,
+            zkapp.updateRoot(
+                // witness,
                 //   Field.zero,
-                Field(0),
+                // Field(0),
                 leafValue.hash());
             zkapp.sign(basicTreeZkAppPrivateKey); // Todo ? 
 
