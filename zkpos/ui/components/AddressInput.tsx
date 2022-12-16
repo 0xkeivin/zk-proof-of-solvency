@@ -21,9 +21,9 @@ import {
 
 type AddressInputProps = {
   buttonName1: String;
-  buttonName2: String;
-  clickHandler: Function;
-  sampleHandler: Function;
+  button1Handler: Function;
+  buttonName2?: String;
+  button2Handler?: Function;
   onChangeHandler: Function;
   value: string | number | readonly string[] | undefined;
   placeHolder: string;
@@ -33,8 +33,8 @@ type AddressInputProps = {
 const AddressInput = ({
   buttonName1,
   buttonName2,
-  clickHandler,
-  sampleHandler,
+  button2Handler,
+  button1Handler,
   onChangeHandler,
   placeHolder,
   value,
@@ -42,7 +42,7 @@ const AddressInput = ({
 }: AddressInputProps) => {
   return (
     <VStack
-    width="xl"
+      width="xl"
       spacing={4}
       direction="row"
       display="flex"
@@ -62,19 +62,21 @@ const AddressInput = ({
         <Button
           w="14rem"
           colorScheme="teal"
-          onClick={(event) => sampleHandler(event)}
+          onClick={(event) => button1Handler(event)}
           id="sampleBtn"
         >
           {buttonName1}
         </Button>
-        <Button
-          w="14rem"
-          colorScheme="linkedin"
-          onClick={(event) => clickHandler(event)}
-          id="processAddrBtn"
-        >
-          {buttonName2}
-        </Button>
+        {buttonName2 && button2Handler && (
+          <Button
+            w="14rem"
+            colorScheme="linkedin"
+            onClick={(event) => button2Handler(event)}
+            id="processAddrBtn"
+          >
+            {buttonName2}
+          </Button>
+        )}
       </HStack>
     </VStack>
   );

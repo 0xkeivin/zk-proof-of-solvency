@@ -16,9 +16,9 @@ import {
 export class UserAccount extends Struct  ({
     publicKey: String,
     salt: Number,
-    accountBalance: Number,
+    accountBalance: BigInt,
   }) {
-    constructor(publicKey: string, salt: number, accountBalance: number) {
+    constructor(publicKey: string, salt: number, accountBalance:  bigint) {
       super({ publicKey, salt, accountBalance });
       this.publicKey = publicKey;
       this.salt = salt;
@@ -80,3 +80,20 @@ export const createTree = (height: number, accounts: any[]): MerkleTree => {
     // console.log(`DEBUG: treeRoot: ${treeRoot}`)
     return tree;
 }
+
+// // create function to check inclusion proof
+// export const checkInclusionProof = (tree: MerkleTree, leafValue: any, leafIndex: number, userAccount: UserAccount): boolean => {
+//     // get class
+//     class MerkleWitness20 extends MerkleWitness(4) { }
+//     // create witness
+//     const witness = new MerkleWitness20(tree.getWitness(BigInt(leafIndex)));
+//     // get leaf value hash
+//     const leafValHash = leafValue.hash();
+//     // check inclusion proof
+//     return tree.checkInclusionProof(
+//         userAccount.publicKey,
+//         userAccount.salt,
+//         userAccount.accountBalance
+//     );
+
+// }

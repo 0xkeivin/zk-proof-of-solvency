@@ -3,12 +3,14 @@ import {
     PublicKey,
     DeployArgs,
     MerkleWitness,
-    Field
+    Field,
+    MerkleTree
 } from 'snarkyjs';
 // create a function that updates the state of contract
 import ZkappWorkerClient from '../pages/zkappWorkerClient';
 import type { Add } from '../../contracts/src/Add';
 import getISOTime from './getISOTime';
+import { UserAccount } from './merkleTree';
 class MerkleWitness20 extends MerkleWitness(4) { }
 
 type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
@@ -71,6 +73,67 @@ export const onSendTransaction = async (zkAppPublicKey: PublicKey,
         // previousVal,
         updatedVal,
     );
+
+    
+    console.log(`${getISOTime()} - creating proof...`);
+    // await state.zkappWorkerClient!.proveUpdateTransaction();
+    await zkappWorkerClient!.proveUpdateTransaction();
+
+    console.log(`${getISOTime()} - getting Transaction JSON...`);
+    const transactionJSON = await zkappWorkerClient!.getTransactionJSON()
+
+    console.log('requesting send transaction...');
+    const { hash } = await (window as any).mina.sendTransaction({
+        transaction: transactionJSON,
+        feePayer: {
+            fee: transactionFee,
+            memo: '',
+        },
+    });
+    const message = `Transaction sent! See transaction at https://berkeley.minaexplorer.com/transaction/${hash}`;
+    console.log(
+        message
+    );
+    // return transactionJSON
+    return hash
+
+    // setState({ ...state, creatingTransaction: false });
+}
+
+
+export const onCheckInclusion = async (zkAppPublicKey: PublicKey,
+    // leafWitness: MerkleWitness20,
+    // previousVal: Field,
+    treeVal: MerkleTree,
+    updatedVal: Field,
+    userAccountVal: UserAccount,
+) => {
+    const zkappWorkerClient = new ZkappWorkerClient();
+    const transactionFee = 0.1;
+    await zkappWorkerClient.loadSnarkyJS();
+    await zkappWorkerClient.setActiveInstanceToBerkeley();
+    // setState({ ...state, creatingTransaction: true });
+    await zkappWorkerClient.loadContract();
+
+    console.log(`${getISOTime()} - compiling zkApp`);
+    await zkappWorkerClient.compileContract();
+    console.log(`${getISOTime()} - zkApp compiled`);
+    // await state.zkappWorkerClient!.fetchAccount({ publicKey: state.publicKey! });
+    // const publicKey = PublicKey.fromBase58(publicKey58);
+    console.log("zkAppPublicKey", zkAppPublicKey);
+    await zkappWorkerClient.initZkappInstance(zkAppPublicKey);
+    console.log('getting zkApp state...');
+    // await state.zkappWorkerClient!.fetchAccount({ publicKey: publicKey });
+    await zkappWorkerClient!.fetchAccount({ publicKey: zkAppPublicKey });
+
+    // check inclusion 
+
+    // const test = treeVal.getNode()
+    // await zkappWorkerClient!.checkInclusion(
+    //     userAccountVal,
+    //     path,
+
+    // );
 
     
     console.log(`${getISOTime()} - creating proof...`);

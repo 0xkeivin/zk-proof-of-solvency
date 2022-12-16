@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import type { BasicMerkleTreeContract } from "../../contracts/src/";
-import { Mina, PublicKey, Field } from "snarkyjs";
+import { Mina, PublicKey, Field, MerkleTree } from "snarkyjs";
 import log from "loglevel";
 import ZkappWorkerClient from "./zkappWorkerClient";
 import {
@@ -58,6 +58,9 @@ export default function Home() {
   const [userAccountDetailsArray, setUserAccountArrayDetails] = useState<
     UserAccount[]
   >([]);
+  const [isProofIncluded, setIsProofIncluded] = useState<Boolean | undefined>()
+
+  const [treeVal, setTreeVal] = useState<MerkleTree>();
 
   // Fetch the account from Berkeley Testnet
   // Sample contract: B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV
@@ -206,17 +209,18 @@ export default function Home() {
   const setStateHandler = async () => {
     log.info("setStateHandler: Clicked");
     /// testing
-    const treeHash = createTree(4, userAccountDetailsArray);
-    log.info(`tree: ${JSON.stringify(treeHash)}`);
-    /// working
-    const onSendTransactionRes = await onSendTransaction(
-      state.zkappPublicKey!,
-      treeHash.getRoot()
-    );
-    if (onSendTransactionRes) {
-      setTransactionRes(JSON.stringify(onSendTransactionRes));
-    }
-    log.info(`updateAddContractRes: ${onSendTransactionRes}`);
+    const treeValRes = createTree(4, userAccountDetailsArray);
+    setTreeVal(treeValRes);
+    log.info(`INFO: treeVal saved: ${JSON.stringify(treeVal)}`);
+    /// working - mute to skip sending on chain
+    // const onSendTransactionRes = await onSendTransaction(
+    //   state.zkappPublicKey!,
+    //   treeValRes.getRoot()
+    // );
+    // if (onSendTransactionRes) {
+    //   setTransactionRes(JSON.stringify(onSendTransactionRes));
+    // }
+    // log.info(`updateAddContractRes: ${onSendTransactionRes}`);
   };
   //Function to take the value of an input and set it state
   const addressInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -255,24 +259,18 @@ export default function Home() {
           // add user account to array
           // userAccountArray.push(newUserAccount);
           // push value to array
-          log.debug(newUserAccount)
+          log.debug(newUserAccount);
           // check if value is already in array
           const isDuplicate = userAccountDetailsArray.some(
             (userAccount) => userAccount.publicKey === newUserAccount.publicKey
           );
           // log.debug(`isDuplicate: ${isDuplicate}`);
           // Todo: First round does get saved for some reason :(
-          if (!isDuplicate){
-            setUserAccountArrayDetails(prevState => {
-              return [
-                ...prevState,
-                newUserAccount,
-              ];
-          });
-
+          if (!isDuplicate) {
+            setUserAccountArrayDetails((prevState) => {
+              return [...prevState, newUserAccount];
+            });
           }
-
-
         }
       }
     }
@@ -281,9 +279,45 @@ export default function Home() {
     );
   };
   // for checking inclusion
-  const inclusionValueHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const inclusionValueHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     // log.debug(event.target.value);
     setInclusionValue(event.target.value);
+  };
+  const checkInclusionHandler = async () => {
+    log.info("checkInclusionHandler: Clicked");
+    log.info(`inclusionValue: ${inclusionValue}`);
+    // hash the inclusion value 
+    const inclusionValArray = inclusionValue?.toString().split(",");
+    // create a userAccount object
+    const inclusionUserAccount = new UserAccount(
+      inclusionValArray![0], // address
+      Number(inclusionValArray![2]), // randNum
+      BigInt(inclusionValArray![1]) // ethBal
+    );
+    console.log(inclusionUserAccount);
+    const inclusionUserAccountHash = inclusionUserAccount.hash();
+    console.log(`inclusionUserAccountHash: ${inclusionUserAccountHash}`);
+    
+
+    // assume we know the total nodes in the tree
+    const totalLeafNodes = 8;
+    // loop to end of total leafNodes and check proof
+    for (let i = 0; i < totalLeafNodes; i++) {
+      const nodeVal = treeVal?.getNode(
+        0,
+        BigInt(i)
+      );
+      // console.log(`nodeVal: ${nodeVal}`);
+
+      if (inclusionUserAccountHash.toString() == nodeVal?.toString()) {
+        console.log(`Found inclusionUserAccountHash at index: ${i}`);
+      }
+    }
+
+
+
   };
   return (
     <>
@@ -362,31 +396,29 @@ export default function Home() {
           </StateCard>
           <Spacer p="1" />
           <HStack>
-
-          <AddressInput
-            buttonName1="Fill Sample Addresses"
-            buttonName2="Process Addresses"
-            sampleHandler={sampleHandler}
-            clickHandler={processAddressHandler}
-            onChangeHandler={addressInputHandler}
-            placeHolder="Enter comma-separated Ethereum Addresses"
-            value={addressValue}
-          />
-          <AddressInput
-            buttonName1="Fill Sample Addresses"
-            buttonName2="Process Addresses"
-            sampleHandler={sampleHandler}
-            clickHandler={processAddressHandler}
-            onChangeHandler={inclusionValueHandler}
-            placeHolder="Enter an entry to check inclusion"
-            value={inclusionValue}
-          />
+            <AddressInput
+              buttonName1="Fill Sample Addresses"
+              buttonName2="Process Addresses"
+              button1Handler={sampleHandler}
+              button2Handler={processAddressHandler}
+              onChangeHandler={addressInputHandler}
+              placeHolder="Enter comma-separated Ethereum Addresses"
+              value={addressValue}
+            />
+            <AddressInput
+              buttonName1="Check Inclusion"
+              button1Handler={checkInclusionHandler}
+              // buttonName2="Process Addresses"
+              // button2Handler={processAddressHandler}
+              onChangeHandler={inclusionValueHandler}
+              placeHolder="Enter an entry to check inclusion"
+              value={inclusionValue}
+            />
           </HStack>
           <Spacer p="1" />
           <CustomDataTable
-          key="userAccountDetailsArray"
-          recordsType={userAccountDetailsArray}
-          
+            key="userAccountDetailsArray"
+            recordsType={userAccountDetailsArray}
           />
         </Stack>
       </ChakraProvider>

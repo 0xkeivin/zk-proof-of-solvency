@@ -10,7 +10,7 @@ import {
 type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
 
 // ---------------------------------------------------------------------------------------
-
+import { UserAccount } from '../utils/merkleTree';
 import type { BasicMerkleTreeContract } from '../../contracts/src/BasicMerkleTreeContract';
 // import type { Add } from "../../contracts/src/Add"; 
 const state = {
@@ -74,11 +74,28 @@ const functions = {
   }) => {
     console.log("createUpdateTransaction() called")
     console.log(`state: ${state.transaction?.toJSON()}`)
+    // get hash of inclusion proof
+    
     const transaction = await Mina.transaction(() => {
       state.zkapp!.updateRoot(
         // args.leafWitness,
         // args.previousVal,
         args.updatedVal,
+      );
+    }
+    );
+    state.transaction = transaction;
+  },
+  checkInclusion: async (args: {
+    userAccountVal: UserAccount,
+    path: MerkleWitness20
+  }) => {
+    console.log("checkInclusion() called")
+    console.log(`state: ${state.transaction?.toJSON()}`)
+    const transaction = await Mina.transaction(() => {
+      state.zkapp!.checkInclusion(
+        args.userAccountVal,
+        args.path
       );
     }
     );

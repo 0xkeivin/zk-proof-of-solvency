@@ -7,6 +7,7 @@ import {
 } from 'snarkyjs'
 
 import type { ZkappWorkerRequest, ZkappWorkerReponse, WorkerFunctions } from './zkappWorker';
+import { UserAccount } from '../utils/merkleTree';
 
 class MerkleWitness20 extends MerkleWitness(4) { }
 export default class ZkappWorkerClient {
@@ -64,6 +65,17 @@ export default class ZkappWorkerClient {
       // leafWitness,
       // previousVal,
       updatedVal,
+    });
+  }
+  checkInclusion(
+    userAccountVal: UserAccount,
+    path: MerkleWitness20
+  ) {
+    return this._call('checkInclusion', {
+      // leafWitness,
+      // previousVal,
+      userAccountVal,
+      path
     });
   }
 
