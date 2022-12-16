@@ -2,10 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import type { BasicMerkleTreeContract } from "../../contracts/src/";
 import {
   Mina,
-  isReady,
   PublicKey,
-  fetchAccount,
-  setGraphqlEndpoint,
   Field,
 } from "snarkyjs";
 import log from "loglevel";
@@ -38,16 +35,12 @@ let transactionFee = 0.1;
 export default function Home() {
   const [currentNum, setCurrentNum] = useState<String | undefined>();
   const [transactionRes, setTransactionRes] = useState<String | undefined>("");
-  const minaNetwork = useRef(Mina);
-  const [zkAppPublicKey, setZkAppPublicKey] = useState<PublicKey>();
-  const [publicKey, setPublicKey] = useState<PublicKey>();
+  const [publicKey, setPublicKey] = useState<String| undefined>();
   let [state, setState] = useState({
     zkappWorkerClient: null as null | ZkappWorkerClient,
     hasWallet: null as null | boolean,
     hasBeenSetup: false,
     accountExists: false,
-    // currentNum: null as null | Field,
-    // publicKey: null as null | PublicKey,
     zkappPublicKey: null as null | PublicKey,
     creatingTransaction: false,
   });
@@ -79,7 +72,7 @@ export default function Home() {
 
         const publicKeyBase58: string = (await mina.requestAccounts())[0];
         const publicKeyVal = PublicKey.fromBase58(publicKeyBase58);
-        setPublicKey(publicKeyVal);
+        setPublicKey(publicKeyBase58);
         console.log("using key", publicKeyVal.toBase58());
 
         console.log("checking if account exists...");
@@ -112,10 +105,8 @@ export default function Home() {
           zkappWorkerClient,
           hasWallet: true,
           hasBeenSetup: true,
-          // publicKey,
           zkappPublicKey,
           accountExists,
-          // currentNum,
         });
       }
     })();
@@ -130,8 +121,9 @@ export default function Home() {
       if (state.hasBeenSetup && !state.accountExists) {
         for (;;) {
           console.log("checking if account exists...");
+          const publicKeyPK = PublicKey.fromBase58(publicKey?.toString()!);
           const res = await state.zkappWorkerClient!.fetchAccount({
-            publicKey: publicKey!,
+            publicKey: publicKeyPK,
           });
           const accountExists = res.error == null;
           if (accountExists) {
@@ -148,10 +140,6 @@ export default function Home() {
   // TODO: Fix this
   const getStateHandler = async () => {
     log.info("getStateHandler: Clicked");
-    // const { account } = await fetchAccount({
-    //   // publicKey: zkAppPublicKey!,
-    //   publicKey: state.zkappPublicKey!,
-    // });
     console.log("getting zkApp state...");
     await state.zkappWorkerClient?.fetchAccount({
       publicKey: state.zkappPublicKey!,
@@ -211,8 +199,15 @@ export default function Home() {
                   </Link>
                 </HStack>
                 <HStack>
-                  <Text as="b">User Address: </Text>
-                  {publicKey?.toBase58()}
+                  <Text as="b">User Address:</Text>
+                  <Link
+                    href={
+                      "https://berkeley.minaexplorer.com/wallet/" + publicKey
+                    }
+                    isExternal
+                  >
+                    {shortenAddress(publicKey)} <ExternalLinkIcon mx="2px" />
+                  </Link>
                 </HStack>
               </CardBody>
             </Card>
