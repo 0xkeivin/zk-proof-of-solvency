@@ -9,7 +9,8 @@ export const getEthBalance = async (address: string) => {
             const data = await response.json()
             // console.log(`DEBUG: data: ${JSON.stringify(data)}`)
             // convert string to number 
-            const balance = Number(data.result) / 1e18
+            // const balance = Number(data.result) / 1e18
+            const balance = data.result
             return balance
         }
     }

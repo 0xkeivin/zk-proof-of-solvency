@@ -78,16 +78,16 @@ export default function Home() {
   // ]
   // create a user with interface
 
-  const userAccountArray = [
-    new UserAccount("0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc", 100, 0),
-    new UserAccount("0xee564fd8992c055663a124db7c6aa8f63ef01af5", 101, 100),
-    new UserAccount("0xa9d1e08c7793af67e9d92fe308d5697fb81d3e43", 102, 200),
-    new UserAccount("0x6b36094c4b0108cc3d6f8ca05fb8878eff54a541", 103, 300),
-    new UserAccount("0x50b90054be990305fd1899e7dcd9bd98cf4b5b4a", 104, 400),
-    new UserAccount("0xd6a309f49cf79542cea91df7b334eb4bd29aa0d7", 105, 500),
-    new UserAccount("0x4305be04c4416152a880d319b85e4ccbdd267073", 106, 600),
-    new UserAccount("0xad3f1453667e44ce5f1c180c967a5310793f8013", 107, 700),
-  ];
+  // const userAccountArray = [
+  //   new UserAccount("0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc", 100, 0),
+  //   new UserAccount("0xee564fd8992c055663a124db7c6aa8f63ef01af5", 101, 100),
+  //   new UserAccount("0xa9d1e08c7793af67e9d92fe308d5697fb81d3e43", 102, 200),
+  //   new UserAccount("0x6b36094c4b0108cc3d6f8ca05fb8878eff54a541", 103, 300),
+  //   new UserAccount("0x50b90054be990305fd1899e7dcd9bd98cf4b5b4a", 104, 400),
+  //   new UserAccount("0xd6a309f49cf79542cea91df7b334eb4bd29aa0d7", 105, 500),
+  //   new UserAccount("0x4305be04c4416152a880d319b85e4ccbdd267073", 106, 600),
+  //   new UserAccount("0xad3f1453667e44ce5f1c180c967a5310793f8013", 107, 700),
+  // ];
   // --- copied from tutorial
   useEffect(() => {
     (async () => {
@@ -203,7 +203,7 @@ export default function Home() {
   const setStateHandler = async () => {
     log.info("setStateHandler: Clicked");
     /// testing
-    const treeHash = createTree(4, userAccountArray);
+    const treeHash = createTree(4, userAccountDetailsArray);
     log.info(`tree: ${JSON.stringify(treeHash)}`);
     /// working
     const onSendTransactionRes = await onSendTransaction(
