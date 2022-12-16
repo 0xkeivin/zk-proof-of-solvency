@@ -279,7 +279,7 @@ export default function Home() {
         <Stack align="center">
           <Spacer p="4" />
           <HStack>
-            <Card width="xl" bg="gray.200">
+            <Card width="5xl" bg="gray.200">
               <CardBody>
                 <HStack>
                   <Text as="b">zkApp Address: </Text>
@@ -289,7 +289,8 @@ export default function Home() {
                     }
                     isExternal
                   >
-                    {shortenAddress(zkAppAddress)} <ExternalLinkIcon mx="2px" />
+                    {/* {shortenAddress(zkAppAddress)}  */}
+                    {zkAppAddress}<ExternalLinkIcon mx="2px" />
                   </Link>
                 </HStack>
                 <HStack>
@@ -300,7 +301,8 @@ export default function Home() {
                     }
                     isExternal
                   >
-                    {shortenAddress(publicKey)} <ExternalLinkIcon mx="2px" />
+                    {/* {shortenAddress(publicKey)}  */}
+                    {publicKey}<ExternalLinkIcon mx="2px" />
                   </Link>
                 </HStack>
               </CardBody>
@@ -308,9 +310,14 @@ export default function Home() {
           </HStack>
           <Spacer p="1" />
           <StateCard buttonName="Get State" clickHandler={getStateHandler}>
-            {currentNum && currentRootHash
-              ? currentNum.toString() + "," + currentRootHash.toString()
-              : "No state yet"}
+            {currentNum && currentRootHash ? (
+              <>
+                <Text>{currentNum.toString()}</Text>
+                <Text>{currentRootHash.toString()}</Text>
+              </>
+            ) : (
+              "No state yet"
+            )}
             {/* {state.currentNum?.toString()} */}
           </StateCard>
           <Spacer p="1" />
@@ -336,7 +343,7 @@ export default function Home() {
           <Spacer p="1" />
           <AddressInput
             buttonName1="Fill Sample Addresses"
-            buttonName2="Generate Merkle Root"
+            buttonName2="Process Addresses"
             sampleHandler={sampleHandler}
             clickHandler={processAddressHandler}
             onChangeHandler={addressInputHandler}
