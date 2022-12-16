@@ -60,7 +60,7 @@ export const onSendTransaction = async (zkAppPublicKey: PublicKey,
     await zkappWorkerClient!.fetchAccount({ publicKey: zkAppPublicKey });
 
     // await state.zkappWorkerClient!.createUpdateTransaction();
-    await zkappWorkerClient!.createUpdateTransaction();
+    // await zkappWorkerClient!.createUpdateTransaction();
 
     
     console.log(`${getISOTime()} - creating proof...`);
