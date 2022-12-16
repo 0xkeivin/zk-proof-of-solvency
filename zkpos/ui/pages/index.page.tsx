@@ -257,7 +257,7 @@ export default function Home() {
           const isDuplicate = userAccountDetailsArray.some(
             (userAccount) => userAccount.publicKey === newUserAccount.publicKey
           );
-          log.debug(`isDuplicate: ${isDuplicate}`);
+          // log.debug(`isDuplicate: ${isDuplicate}`);
           // Todo: First round does get saved for some reason :(
           if (!isDuplicate){
             setUserAccountArrayDetails(prevState => {
@@ -362,11 +362,11 @@ export default function Home() {
             value={addressValue}
           />
           <Spacer p="1" />
-          {/* <CustomDataTable
+          <CustomDataTable
           key="userAccountDetailsArray"
           recordsType={userAccountDetailsArray}
           
-          /> */}
+          />
         </Stack>
       </ChakraProvider>
     </>
