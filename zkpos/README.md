@@ -4,7 +4,7 @@
 cd contracts
 npm run build && node build/src/main.js
 ```
-
+ 
 ## deploying contracts
 ```bash
 cd contracts
